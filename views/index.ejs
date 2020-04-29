@@ -2,12 +2,21 @@
 <head>
     <title>Interactive Covid19 Map</title>
     <style>
+        .sphere {
+        fill: #141212;
+        }
+        .country {
+        fill: lightgray;
+        stroke: black;
+        stroke-opacity: 0.1;
+        }
         .date{
             margin: auto;
             width: 40%;
-            border: 3px solid #bb86fc;
-            padding: 5px;
+            border: 2px solid #bb86fc;
+            padding: 1px;
             text-align: center;
+            line-height: 5%;
         }
 
         .slidecontainer {
@@ -48,12 +57,45 @@
           cursor: pointer;
         }
     </style>
+    <script src= "https://unpkg.com/d3@5.16.0/dist/d3.min.js"></script>
+    <script src= "https://unpkg.com/topojson@3.0.2/dist/topojson.js"></script>
+    
 </head>
 <body style = "background-color:#141212;">
-<div class = "date"><p style = "color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Covid19 worldwide as of <span id="demo" ></span></p></div>
+<div class = "date"><p style = "color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+    Covid19 worldwide as of <span id="demo" style = "color:red;"></span></p>
+    <p style="font-size:50%; color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Use the slider at the bottom to change the date.</p></div>
+
+<svg id = 'map' width="960" height="500" style = "display:block; margin: auto;"></svg>
+<script>(function (d3,topojson) {
+    'use strict';
+  
+    const svg = d3.select('svg');
+  
+    const projection = d3.geoNaturalEarth1();
+    const pathGenerator = d3.geoPath().projection(projection);
+  
+    svg.append('path')
+        .attr('class', 'sphere')
+        .attr('d', pathGenerator({type: 'Sphere'}));
+  
+    d3.json('https://unpkg.com/world-atlas@2.0.2/countries-110m.json')
+      .then(data => {
+        const countries = topojson.feature(data, data.objects.countries);
+        svg.selectAll('path').data(countries.features)
+          .enter().append('path')
+            .attr('class', 'country')
+            .attr('d', pathGenerator);
+      });
+  
+    }(d3,topojson));</script>
+  
+
 <input type="range" min="0" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider" id="myRange">
+
+
 <p id = 'hidString' hidden><%= locals.todayString %></p>
-</div>
+
 
 <script>
     var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
@@ -64,7 +106,7 @@
     var booly = 0;
     slider.oninput = function() {
         booly = 1
-        output.innerHTML = new Date((this.value *(1000*3600*24)+firstD.getTime())).toDateString();
+        output.innerHTML = new Date((this.value *(1000*3600*24)+firstD.getTime())).toLocaleDateString();
     }
     if(booly == 0)
         output.innerHTML = todayString;
