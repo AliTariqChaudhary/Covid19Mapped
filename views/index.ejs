@@ -6,7 +6,6 @@
         fill: #141212;
         }
         .country {
-        fill: lightgray;
         stroke: black;
         stroke-opacity: 0.1;
         }
@@ -64,9 +63,11 @@
 <body style = "background-color:#141212;">
 <div class = "date"><p style = "color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
     Covid19 worldwide as of <span id="demo" style = "color:red;"></span></p>
-    <p style="font-size:50%; color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Use the slider at the bottom to change the date.</p></div>
+    <p style="font-size:60%; color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Use the slider at the bottom to change the date.</p></div>
 
-<svg id = 'map' width="960" height="500" style = "display:block; margin: auto;"></svg>
+<div>
+    <svg id = 'map' width="960" height="500" style = "display:flex; margin: auto;"></svg>
+    </div>
 <script>(function (d3,topojson) {
     'use strict';
   
@@ -81,13 +82,14 @@
   
     d3.json('https://unpkg.com/world-atlas@2.0.2/countries-110m.json')
       .then(data => {
+        console.log(data.objects.countries.geometries[10]);
         const countries = topojson.feature(data, data.objects.countries);
         svg.selectAll('path').data(countries.features)
           .enter().append('path')
             .attr('class', 'country')
-            .attr('d', pathGenerator);
+            .attr('d', pathGenerator)
+            .attr('fill', d=> '#ffcccb');
       });
-  
     }(d3,topojson));</script>
   
 
@@ -106,7 +108,7 @@
     var booly = 0;
     slider.oninput = function() {
         booly = 1
-        output.innerHTML = new Date((this.value *(1000*3600*24)+firstD.getTime())).toLocaleDateString();
+        output.innerHTML = new Date((this.value *(1000*3600*24)+firstD.getTime())).toDateString();
     }
     if(booly == 0)
         output.innerHTML = todayString;
