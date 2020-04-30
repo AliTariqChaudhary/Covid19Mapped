@@ -5,6 +5,7 @@ const ejs = require('ejs');
 const https = require('https');
 var fs = require('fs');
 const d3 = require('d3');
+const schedule = require('node-schedule')
 const port = process.env.PORT || 3000;
 
 //firt date is 2020-01-22T00:00:00Z
@@ -48,10 +49,10 @@ var diffArray = [['Western Sahara', 'W. Sahara'],['Bosnia and Herzegovina', 'Bos
 
 async function getFromSave(){
   await getFromSave1();
- /* for(var i = 0; i<diffArray.length;i++ ){
+  for(var i = 0; i<diffArray.length;i++ ){
     DictFromSave[diffArray[i][1]] = DictFromSave[diffArray[i][0]];
     delete DictFromSave[diffArray[i][0]];
-  }*/
+  }
 }
 
 function sleep(ms) {
@@ -223,10 +224,9 @@ async function getData(){
 
 async function getTotalData(){
   await getData();
-  getFromSave()
+  await getFromSave()
 }
 
-//getTotalData();
 
 
 var max = 0;
@@ -255,6 +255,13 @@ async function getMaxCases2(){
 }
 
 getMaxCases2();
+
+
+schedule.scheduleJob({hour: 00, minute: 00}, async function(){
+  await getData();
+  await getMaxCases2();
+})
+
 
 app.set('view engine', 'ejs');
 
