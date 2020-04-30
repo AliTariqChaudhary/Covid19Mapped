@@ -16,6 +16,7 @@
             padding: 1px;
             text-align: center;
             line-height: 5%;
+            position:static;
         }
 
         .slidecontainer {
@@ -62,24 +63,93 @@
 </head>
 <body style = "background-color:#141212;">
 <div class = "date"><p style = "color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-    Covid19 worldwide as of <span id="demo" style = "color:red;"></span></p>
+    Active Covid19 Cases Worldwide as of <span id="demo" style = "color:red;"></span></p>
     <p style="font-size:60%; color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Use the slider at the bottom to change the date.</p></div>
 
 <div>
     <svg id = 'map' width="960" height="500" style = "display:flex; margin: auto;"></svg>
     </div>
-<script>(function (d3,topojson) {
-    'use strict';
   
+
+<input type="range" min="2" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider" id="myRange">
+
+
+<p id = 'hidString' hidden><%= locals.todayString %></p>
+<p id = "cD" hidden> <%= locals.cd%> </p>
+<p id = "max" hidden><%= locals.max%> </p>
+<p id = "todayForLook" hidden><%= locals.todayString %></p>
+<p id = "totalDays" hidden><%= locals.totalDays %></p>
+<p id = "todaytoday" hidden></p>
+
+
+<script>
+    var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("demo");
+    var tod = document.getElementById('todayForLook');
+    var todayString =  document.getElementById("hidString").innerText;
+    output.innerHTML = slider.value;
+    temp2 = new Date(new Date(((Number(document.getElementById('totalDays').innerText)-2) *(1000*3600*24)+firstD.getTime())).toLocaleString('en-US', {timeZone: 'UTC'})).toISOString();
+    temp2 = temp2.substr(0, 12) + '0:00:00Z';
+    document.getElementById('todayForLook').innerText = temp2;
+    var booly = 0;
+    slider.oninput = function() {
+        temp = new Date(new Date(((this.value-2) *(1000*3600*24)+firstD.getTime())).toLocaleString('en-US', {timeZone: 'UTC'})).toISOString()
+        temp = temp.substr(0, 12) + '0:00:00Z';
+        tod.innerHTML = temp;
+        booly = 1
+        output.innerHTML = new Date((this.value *(1000*3600*24)+firstD.getTime())).toDateString();
+        reload();
+        
+    }
+    if(booly == 0)
+        output.innerHTML = todayString;
+</script>
+
+<script>
+  
+  var cD = JSON.parse(document.getElementById('cD').innerText);
+  var max = document.getElementById('max').innerText;
+
+  function generateColor(d){
+    try{
+      count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
+      if (count < 0.001 * max)
+        return '#fff5f0'
+      else if(count < 0.005 * max)
+        return '#fee0d2'
+      else if(count < 0.01 * max)
+        return '#fcbba1'
+      else if(count < 0.02 * max)
+        return '#fc9272'
+      else if(count < 0.025 * max)
+        return '#fb6a4a'
+      else if(count < 0.03 * max)
+        return '#ef3b2c'
+      else if(count < 0.04 * max)
+        return '#cb181d'
+      else if(count < 0.50 * max)
+        return '#a50f15'
+      else if(count < 2 * max)
+        return '#67000d'
+    }
+    catch(e){
+      //console.log(d.properties['name'])
+      return "rgb(169,169,169)";
+    }
+  }
+
+  (function (d3,topojson) {
+  'use strict';
     const svg = d3.select('svg');
-  
+
     const projection = d3.geoNaturalEarth1();
     const pathGenerator = d3.geoPath().projection(projection);
-  
+
     svg.append('path')
         .attr('class', 'sphere')
         .attr('d', pathGenerator({type: 'Sphere'}));
-  
+
     d3.json('https://unpkg.com/world-atlas@2.0.2/countries-110m.json')
       .then(data => {
         const countries = topojson.feature(data, data.objects.countries);
@@ -87,31 +157,17 @@
           .enter().append('path')
             .attr('class', 'country')
             .attr('d', pathGenerator)
-            .attr('fill', d=> '#ffcccb');
+            .attr('fill', d=> generateColor(d));
       });
-    }(d3,topojson));</script>
-  
-
-<input type="range" min="0" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider" id="myRange">
-
-
-<p id = 'hidString' hidden><%= locals.todayString %></p>
-<p id = "cD" hidden> <%= locals.cd%> </p>
-
-<script>
-    var cD = document.getElementById('cD').innerText;
-    console.log(cD['Eq. Guinea']);
-    var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
-    var slider = document.getElementById("myRange");
-    var output = document.getElementById("demo");
-    var todayString =  document.getElementById("hidString").innerText;
-    output.innerHTML = slider.value;
-    var booly = 0;
-    slider.oninput = function() {
-        booly = 1
-        output.innerHTML = new Date((this.value *(1000*3600*24)+firstD.getTime())).toDateString();
+    }(d3,topojson));
+    
+    function reload(){
+      (function (d3,topojson) {
+      'use strict';
+      const svg = d3.select('svg');
+      svg.selectAll('path').attr('fill', d => generateColor(d));
+    }(d3,topojson));
     }
-    if(booly == 0)
-        output.innerHTML = todayString;
-</script>
+    </script>
+
 </body>

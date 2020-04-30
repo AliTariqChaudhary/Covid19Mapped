@@ -5,6 +5,7 @@ const ejs = require('ejs');
 const https = require('https');
 var fs = require('fs');
 const d3 = require('d3');
+const port = process.env.PORT || 3000;
 
 //firt date is 2020-01-22T00:00:00Z
 var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
@@ -40,16 +41,17 @@ function getFromSave1(){
   }));
 }
 
-var diffArray = [['Western Sahara', 'W. Sahara'],['Bosnia', 'Bosniea and Herz.'],
+var diffArray = [['Western Sahara', 'W. Sahara'],['Bosnia and Herzegovina', 'Bosnia and Herz.'],
 ['Central African Republic', 'Central African Rep.'],['Republic of the Congo', 'Congo'],['Equatorial Guinea', 'Eq. Guinea'],
-['korea-north', 'North Korea'],['Solomon Islands', 'Solomon Is.'],['South Sudan', 'S. Sudan'], ['CI', "Côte d'Ivoire"]];
+['korea-north', 'North Korea'],['Solomon Islands', 'Solomon Is.'],['South Sudan', 'S. Sudan'], ['CI', "Côte d'Ivoire"], 
+['Dominican Republic', 'Dominican Rep.'] , ['Democratic Republic of the Congo', 'Dem. Rep. Congo']];
 
 async function getFromSave(){
   await getFromSave1();
-  for(var i = 0; i<7;i++ ){
+ /* for(var i = 0; i<diffArray.length;i++ ){
     DictFromSave[diffArray[i][1]] = DictFromSave[diffArray[i][0]];
     delete DictFromSave[diffArray[i][0]];
-  }
+  }*/
 }
 
 function sleep(ms) {
@@ -60,7 +62,6 @@ function sleep(ms) {
 
 function doRequest(key) {
     tempURL = 'https://api.covid19api.com/total/dayone/country/'+key+'/status/confirmed';
-    tempURL2 = 'https://api.covid19api.com/total/dayone/country/'+key+'/status/deaths';
     return new Promise ((resolve, reject) => {
       let req = https.get(tempURL, (res) => {
         const { statusCode } = res;
@@ -156,12 +157,62 @@ function doRequest(key) {
     }); 
   }
 
+  function doRequest3(key) {
+    tempURL2 = 'https://api.covid19api.com/total/dayone/country/'+key+'/status/recovered';
+    return new Promise ((resolve, reject) => {
+      let req =   https.get(tempURL2, (res) => {
+        const { statusCode } = res;
+        const contentType = res.headers['content-type'];
+        let error;
+        if (statusCode !== 200) {
+            error = new Error('Request Failed.\n' +
+                            `Status Code: ${statusCode}`);
+        } else if (!/^application\/json/.test(contentType)) {
+            error = new Error('Invalid content-type.\n' +
+                            `Expected application/json but received ${contentType}`);
+        }
+        if (error) {
+            console.error(error.message);
+            // Consume response data to free up memory
+            res.resume();
+            return;
+        }
+
+        res.setEncoding('utf8');
+        let rawData = '';
+        res.on('data', (chunk) => { rawData += chunk; });
+        res.on('end', () => {
+            try {
+                parsedData = JSON.parse(rawData);
+                for(var i = 0; i <parsedData.length; i++){
+                    countryDict[key][parsedData[i].Date]['Recovered'] = parsedData[i].Cases;
+                    countryDict[key][parsedData[i].Date]['Active'] = countryDict[key][parsedData[i].Date]['Cases'] - countryDict[key][parsedData[i].Date]['Deaths'] - parsedData[i].Cases;
+                }
+            } catch (e) {
+            console.error(e.message);
+            }
+        });
+        }).on('error', (e) => {
+        console.error(`Got error: ${e.message}`);
+    });
+  
+      req.on('response', res => {
+        resolve(res);
+      });
+  
+      req.on('error', err => {
+        reject(err);
+      });
+    }); 
+  }
+
 async function getData(){
 
     for(var key in countryDict){
         console.log(key);
         await doRequest(key);
         await doRequest2(key);
+        await doRequest3(key);
     }
     fs.writeFile("countryDict.txt", JSON.stringify(countryDict), 'binary', (err)=>{
         if(err) console.log(err)
@@ -178,31 +229,38 @@ async function getTotalData(){
 //getTotalData();
 
 
+var max = 0;
 
-var max = 1000000; 
-function getMaxCases(){
+
+ function getMaxCases(){
     var temp = 0;
     var temp1;
     for(var key in DictFromSave){
-      temp1 = Object.keys(DictFromSave[key])[Object.keys(DictFromSave[key]).length - 1]
-      try{
-        temp =  (DictFromSave[key][temp1].Deaths);
-        if(temp>max){
-          max = temp;
-        }
+      for(var i in DictFromSave[key]){
+        if(DictFromSave[key][i].Active > max)
+          max = DictFromSave[key][i].Active;
       }
-      catch(e){
-      } 
+      if(key == "C�te d'Ivoire"){
+        DictFromSave["Côte d'Ivoire"] = DictFromSave["C�te d'Ivoire"];
+        delete DictFromSave["C�te d'Ivoire"];
+      }
     }
-    console.log(max);
+    
 }
-getFromSave();
+
+
+async function getMaxCases2(){
+  await getFromSave();
+  getMaxCases();
+}
+
+getMaxCases2();
+
 app.set('view engine', 'ejs');
 
+
 app.get('/', (req, res) => {
-  res.render('index', {totalDays: diff+1, todayString: todayString, cd: DictFromSave, max : max});
+  res.render('index', {totalDays: diff+1, todayString: todayString, cd: JSON.stringify(DictFromSave), max : JSON.stringify(max)});
 });
 
-app.listen(3000, () => {
-  console.log('Started on port 3000.')
-});
+app.listen(port, () => console.log(`Starting on port ${port}!`));
