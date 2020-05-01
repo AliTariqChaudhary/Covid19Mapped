@@ -17,7 +17,7 @@
     <title>Interactive Covid19 Map</title>
     <style>
         .sphere {
-        fill: #141212;
+        fill: #0986af;
         }
         .country {
         stroke: black;
@@ -25,7 +25,7 @@
         }
         .date{
             margin: auto;
-            border: 2px solid #bb86fc;
+            border: 2px solid #054E66;
             padding: 1px;
             text-align: center;
             line-height: 5%;
@@ -41,7 +41,7 @@
           margin-left: 5%;
           height: 15px;
           border-radius: 5px;
-          background: #bb86fc;
+          background: #054E66;
           outline: none;
           opacity: 0.7;
           -webkit-transition: .2s;
@@ -58,7 +58,7 @@
           width: 25px;
           height: 25px;
           border-radius: 50%;
-          background: #03dac6;
+          background: #ff0000;
           cursor: pointer;
         }
         
@@ -66,7 +66,7 @@
           width: 25px;
           height: 25px;
           border-radius: 50%;
-          background: #03dac6;
+          background: #0986af;
           cursor: pointer;
         }
         .on_top
@@ -83,10 +83,10 @@
     <script src= "https://unpkg.com/topojson@3.0.2/dist/topojson.js"></script>
     
 </head>
-<body id = 'body' style = "background-color:#141212;">
-<div class = "date"><p style = "line-height:90%;word-wrap:break-word;color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+<body id = 'body' style = "background-color:#D8DEE9;">
+<div class = "date"><p style = "line-height:90%;word-wrap:break-word;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
     Active Covid19 Cases per Capita as of <text id="demo" style = "color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text></p>
-    <p style="font-size:60%; color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Use the slider at the bottom to change the date.</p></div>
+    <p style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Use the slider at the bottom to change the date.</p></div>
 
     <div class='set_width'>
       <div class='on_top'>
@@ -111,13 +111,13 @@
 
 <br><br>
 
-<p  id = 'deadParagraph' style = "line-height:90%;color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-  On <text id="demo2" style = "color: #03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>,
-    <text id = "deadToday" style = "color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text> people died of the virus.</p>
+<p  id = 'deadParagraph' style = "line-height:90%;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+  On <text id="demo2" style = "color: #054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>,
+    <text id = "deadToday" style = "color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text> people died from the virus.</p>
 
 <br><br><br>
 
-<p style = "width: 35%;margin: auto;line-height:90%;color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Contact: <a href = "mailto:hello@covid19mapped.org">hello@covid19mapped.org</a></p>
+<p style = "width: 35%;margin: auto;line-height:90%;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Contact: <a href = "mailto:hello@covid19mapped.org">hello@covid19mapped.org</a></p>
 
 <script>
     var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
@@ -144,7 +144,7 @@
           document.getElementById('deadParagraph').style = "display:none;"
         }
         else{
-          document.getElementById('deadParagraph').style = "line-height:90%;color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+          document.getElementById('deadParagraph').style = "line-height:90%;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
         }
 //        document.getElementById('addTo').innerHTML = 0;
         /*for(var i =0; i<Number(document.getElementById('deadToday').innerText); i++){
@@ -164,46 +164,46 @@
   var max = document.getElementById('max').innerText;
   function getColor(count){
     if (count < 0.005 * max)
-        return '#fff5f0'
+        return '#FFB300'
       else if(count < 0.03 * max)
-        return '#fee0d2'
+        return '#F8BBD0'
       else if(count < 0.08 * max)
-        return '#fcbba1'
+        return '#CE93D8'
       else if(count < 0.13 * max)
-        return '#fc9272'
+        return '#673AB7'
       else if(count < 0.18 * max)
-        return '#fb6a4a'
+        return '#FF7352'
       else if(count < 0.24 * max)
-        return '#ef3b2c'
+        return '#FF5F3E'
       else if(count < 0.3 * max)
-        return '#cb181d'
+        return '#FF4C29'
       else if(count < 0.5 * max)
-        return '#a50f15'
+        return '#FF3815'
       else if(count < 2 * max)
-        return '#67000d'
+        return '#D50000'
   };
   function generateColor(d){
     try{
       count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
       count/= pD[d.properties['name']];
       if (count < 0.005 * max)
-        return '#fff5f0'
+        return '#FFB300'
       else if(count < 0.03 * max)
-        return '#fee0d2'
+        return '#F8BBD0'
       else if(count < 0.08 * max)
-        return '#fcbba1'
+        return '#CE93D8'
       else if(count < 0.13 * max)
-        return '#fc9272'
+        return '#673AB7'
       else if(count < 0.18 * max)
-        return '#fb6a4a'
+        return '#FF7352'
       else if(count < 0.24 * max)
-        return '#ef3b2c'
+        return '#FF5F3E'
       else if(count < 0.3 * max)
-        return '#cb181d'
+        return '#FF4C29'
       else if(count < 0.5 * max)
-        return '#a50f15'
+        return '#FF3815'
       else if(count < 2 * max)
-        return '#67000d'
+        return '#D50000'
     }
     catch(e){
       //console.log(d.properties['name'])
