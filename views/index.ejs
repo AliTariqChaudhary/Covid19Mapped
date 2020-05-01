@@ -147,6 +147,12 @@
     }
     catch(e){
       //console.log(d.properties['name'])
+      if(d.properties['name'] == 'Greenland'){
+        if(document.getElementById('todayForLook').innerText.substr(5,2) == '03' && Number(document.getElementById('todayForLook').innerText.substr(8,2)) > 15)
+          return '#fff5f0'
+        else if(document.getElementById('todayForLook').innerText.substr(5,2) == '04' && Number(document.getElementById('todayForLook').innerText.substr(8,2)) < 8)
+          return '#fff5f0'
+      }
       return "rgb(169,169,169)";
     }
   }

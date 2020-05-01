@@ -9,6 +9,14 @@ const schedule = require('node-schedule')
 const port = process.env.PORT || 3000;
 
 //firt date is 2020-01-22T00:00:00Z
+var tmppp;
+async function test(){
+  tmppp = await covid19api.getReportsByCountries(['Greenland']);
+  console.log(tmppp);
+}
+
+test();
+
 var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
 var today = new Date(new Date().toUTCString());
 diff = Math.floor((today.getTime()- firstD.getTime())/(1000*3600*24));
