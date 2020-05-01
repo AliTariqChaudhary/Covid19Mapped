@@ -81,7 +81,7 @@
     <script src= "https://unpkg.com/topojson@3.0.2/dist/topojson.js"></script>
     
 </head>
-<body style = "background-color:#141212;">
+<body id = 'body' style = "background-color:#141212;">
 <div class = "date"><p style = "line-height:90%;word-wrap:break-word;color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
     Active Covid19 Cases Worldwide as of <text id="demo" style = "color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text></p>
     <p style="font-size:60%; color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Use the slider at the bottom to change the date.</p></div>
@@ -96,6 +96,7 @@
 
 <input type="range" min="2" max="<%= locals.totalDays %>-1" value="<%= locals.totalDays %>" class="slider" id="myRange">
 
+<div id = 'addTo'></div>
 
 <p id = 'hidString' hidden><%= locals.todayString %></p>
 <p id = "cD" hidden> <%= locals.cd%> </p>
@@ -103,7 +104,8 @@
 <p id = "todayForLook" hidden><%= locals.todayString %></p>
 <p id = "totalDays" hidden><%= locals.totalDays %></p>
 <p id = "todaytoday" hidden></p>
-
+<p id = "deadToday" hidden></p>
+<p id = "dD" hidden><%= locals.dD%></p>
 
 
 <script>
@@ -124,10 +126,15 @@
         booly = 1
         output.innerHTML = new Date((this.value *(1000*3600*24)+firstD.getTime())).toDateString();
         reload();
-        
+/*        document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText]
+        document.getElementById('addTo').innerHTML = 0;
+        for(var i =0; i<Number(document.getElementById('deadToday').innerText); i++){
+          document.getElementById('addTo').innerHTML += '<svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg>';
+        }*/
     }
     if(booly == 0)
         output.innerHTML = new Date(todayString).toDateString();
+        //document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText]
 </script>
 
 <script>
@@ -194,7 +201,15 @@
       return "rgb(169,169,169)";
     }
   }
-
+  function generateTitle(d){
+    try{
+      count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
+      return "Active Cases on " +  document.getElementById('demo').innerText + ": " + String(count);
+    }
+    catch(e){
+      return '';
+    }
+  }
   (function (d3,topojson) {
   'use strict';
     const svg = d3.select('svg');
@@ -213,7 +228,8 @@
           .enter().append('path')
             .attr('class', 'country')
             .attr('d', pathGenerator)
-            .attr('fill', d=> generateColor(d));
+            .attr('fill', d=> generateColor(d))
+            /*.append('title').text(d => generateTitle(d))*/;
       });
     }(d3,topojson));
     
