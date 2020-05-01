@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 
 //firt date is 2020-01-22T00:00:00Z
 
-app.use(favicon(__dirname + '/views/images/favicon.png'));
+//app.use(favicon(__dirname + '/views/images/favicon.png'));
 
 
 var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
