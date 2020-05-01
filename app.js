@@ -250,22 +250,35 @@ var max = 0;
     
 }
 
+var DeathsDict = {};
 
 function getDeathsbyDay(){
   var tempkey;
+  var booly = 0;
+  var booly2 = 0;
   for(var key in DictFromSave){
-    tempkey = Object.DictFromSave[key][0]
     for(var i in DictFromSave[key]){
-      if(tempkey!=i)
-        console.log(DictFromSave[key][i].Deaths - DictFromSave[key][tempkey]);
+      if(booly!=0){
+        DictFromSave[key][i]['NewDeaths'] = DictFromSave[key][i].Deaths - DictFromSave[key][tempkey].Deaths;
+        if(booly2 == 0){
+          DeathsDict[i] = DictFromSave[key][i].Deaths - DictFromSave[key][tempkey].Deaths;
+        } 
+        else{
+          DeathsDict[i] += DictFromSave[key][i].Deaths - DictFromSave[key][tempkey].Deaths;
+        }
+      }
       tempkey = i;
+      booly = 1
     }
-  }
+    booly2 = 1;
+    booly = 0;
+  } 
 }
 
 async function getMaxCases2(){
   await getFromSave();
   getMaxCases();
+  getDeathsbyDay();
 }
 
 getMaxCases2();
@@ -285,7 +298,7 @@ app.set('view engine', 'ejs');
 
 
 app.get('/', (req, res) => {
-  res.render('index', {totalDays: diff+1, todayString: todayString, cd: JSON.stringify(DictFromSave), max : JSON.stringify(max)});
+  res.render('index', {totalDays: diff+1, todayString: todayString, cd: JSON.stringify(DictFromSave), max : JSON.stringify(max), dD: JSON.stringify(DeathsDict), dead: 5});
 });
 
 app.listen(port, () => console.log(`Starting on port ${port}!`));

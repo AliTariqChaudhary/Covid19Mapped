@@ -105,6 +105,7 @@
 <p id = "todaytoday" hidden></p>
 
 
+
 <script>
     var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
     var slider = document.getElementById("myRange");
@@ -126,14 +127,33 @@
         
     }
     if(booly == 0)
-        output.innerHTML = todayString;
+        output.innerHTML = new Date(todayString).toDateString();
 </script>
 
 <script>
   
   var cD = JSON.parse(document.getElementById('cD').innerText);
   var max = document.getElementById('max').innerText;
-
+  function getColor(count){
+    if (count < 0.001 * max)
+          return '#fff5f0'
+        else if(count < 0.005 * max)
+          return '#fee0d2'
+        else if(count < 0.01 * max)
+          return '#fcbba1'
+        else if(count < 0.02 * max)
+          return '#fc9272'
+        else if(count < 0.025 * max)
+          return '#fb6a4a'
+        else if(count < 0.03 * max)
+          return '#ef3b2c'
+        else if(count < 0.04 * max)
+          return '#cb181d'
+        else if(count < 0.50 * max)
+          return '#a50f15'
+        else if(count < 2 * max)
+          return '#67000d'
+  };
   function generateColor(d){
     try{
       count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
@@ -163,6 +183,13 @@
           return '#fff5f0'
         else if(document.getElementById('todayForLook').innerText.substr(5,2) == '04' && Number(document.getElementById('todayForLook').innerText.substr(8,2)) < 8)
           return '#fff5f0'
+      }
+      else if(d.properties['name'] == 'Somaliland'){
+          try{count = cD['Somalia'][document.getElementById('todayForLook').innerText].Active}
+          catch(e){
+            return "rgb(169,169,169)"
+          }
+          return getColor(count)
       }
       return "rgb(169,169,169)";
     }
