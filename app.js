@@ -286,6 +286,7 @@ getMaxCases2();
 
 schedule.scheduleJob({hour: 00, minute: 00}, async function(){
   await getData();
+  await(sleep(1000))
   await getMaxCases2();
   today = new Date(new Date().toUTCString());
   diff = Math.floor((today.getTime()- firstD.getTime())/(1000*3600*24));
