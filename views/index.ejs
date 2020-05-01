@@ -68,6 +68,15 @@
           background: #03dac6;
           cursor: pointer;
         }
+        .on_top
+        {
+            top:0;left:0;bottom:0;right:0;/*expand this div to the size of its parent*/
+        }
+        .set_width{
+          margin-left: 12.5%;
+          width: 75%;
+          height: 50%;
+        }
     </style>
     <script src= "https://unpkg.com/d3@5.16.0/dist/d3.min.js"></script>
     <script src= "https://unpkg.com/topojson@3.0.2/dist/topojson.js"></script>
@@ -78,9 +87,13 @@
     Active Covid19 Cases Worldwide as of <span id="demo" style = "color:red;"></span></p>
     <p style="font-size:60%; color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Use the slider at the bottom to change the date.</p></div>
 
-<div>
-    <svg id = 'map' width="960" height="500" style = "display:flex; margin: auto;"></svg>
-    </div>
+    <div class='set_width'>
+      <div class='on_top'>
+          <svg viewBox="0 0 960 500">
+          </svg>
+      </div>
+      <div class='set_height'></div>
+  </div>
   
 
 <input type="range" min="2" max="<%= locals.totalDays %>-1" value="<%= locals.totalDays %>" class="slider" id="myRange">
