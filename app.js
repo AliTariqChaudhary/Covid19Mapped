@@ -251,10 +251,21 @@ var max = 0;
 }
 
 
+function getDeathsbyDay(){
+  var tempkey;
+  for(var key in DictFromSave){
+    tempkey = Object.DictFromSave[key][0]
+    for(var i in DictFromSave[key]){
+      if(tempkey!=i)
+        console.log(DictFromSave[key][i].Deaths - DictFromSave[key][tempkey]);
+      tempkey = i;
+    }
+  }
+}
+
 async function getMaxCases2(){
   await getFromSave();
   getMaxCases();
-//  getDeathsbyDay();
 }
 
 getMaxCases2();
