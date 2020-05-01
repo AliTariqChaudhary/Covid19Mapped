@@ -9,13 +9,7 @@ const schedule = require('node-schedule')
 const port = process.env.PORT || 3000;
 
 //firt date is 2020-01-22T00:00:00Z
-var tmppp;
-async function test(){
-  tmppp = await covid19api.getReportsByCountries(['Greenland']);
-  console.log(tmppp);
-}
 
-test();
 
 var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
 var today = new Date(new Date().toUTCString());
@@ -260,6 +254,7 @@ var max = 0;
 async function getMaxCases2(){
   await getFromSave();
   getMaxCases();
+//  getDeathsbyDay();
 }
 
 getMaxCases2();
