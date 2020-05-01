@@ -82,7 +82,7 @@
     </div>
   
 
-<input type="range" min="2" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider" id="myRange">
+<input type="range" min="2" max="<%= locals.totalDays %>-1" value="<%= locals.totalDays %>" class="slider" id="myRange">
 
 
 <p id = 'hidString' hidden><%= locals.todayString %></p>
@@ -100,7 +100,7 @@
     var tod = document.getElementById('todayForLook');
     var todayString =  document.getElementById("hidString").innerText;
     output.innerHTML = slider.value;
-    temp2 = new Date(new Date(((Number(document.getElementById('totalDays').innerText)-2) *(1000*3600*24)+firstD.getTime())).toLocaleString('en-US', {timeZone: 'UTC'})).toISOString();
+    temp2 = new Date(new Date(((Number(document.getElementById('totalDays').innerText)-3) *(1000*3600*24)+firstD.getTime())).toLocaleString('en-US', {timeZone: 'UTC'})).toISOString();
     temp2 = temp2.substr(0, 12) + '0:00:00Z';
     document.getElementById('todayForLook').innerText = temp2;
     var booly = 0;
