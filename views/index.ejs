@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <meta name="keywords" content="Covid19, Mapped, Map, Cases, Active, Deaths, Tracker, Tracked, Mapper, Count, Counter">
+  <meta name="keywords" content="Covid19, Mapped, Map, Cases, Active, Deaths, Tracker, Tracked, Mapper, Count, Counter, Coronavirus, Novel Coronaviurs, Sars-Cov-2">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165025055-1"></script>
@@ -83,7 +83,7 @@
 </head>
 <body id = 'body' style = "background-color:#141212;">
 <div class = "date"><p style = "line-height:90%;word-wrap:break-word;color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-    Active Covid19 Cases Worldwide as of <text id="demo" style = "color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text></p>
+    Active Covid19 Cases per Capita as of <text id="demo" style = "color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text></p>
     <p style="font-size:60%; color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Use the slider at the bottom to change the date.</p></div>
 
     <div class='set_width'>
@@ -96,7 +96,6 @@
 
 <input type="range" min="2" max="<%= locals.totalDays %>-1" value="<%= locals.totalDays %>" class="slider" id="myRange">
 
-<div id = 'addTo'></div>
 
 <p id = 'hidString' hidden><%= locals.todayString %></p>
 <p id = "cD" hidden> <%= locals.cd%> </p>
@@ -104,14 +103,25 @@
 <p id = "todayForLook" hidden><%= locals.todayString %></p>
 <p id = "totalDays" hidden><%= locals.totalDays %></p>
 <p id = "todaytoday" hidden></p>
-<p id = "deadToday" hidden></p>
+<!--<p id = "deadToday" hidden></p>-->
 <p id = "dD" hidden><%= locals.dD%></p>
+<p id = "pD" hidden><%= locals.pD%></p>
 
+<br><br>
+
+<p  id = 'deadParagraph' style = "line-height:90%;color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+  On <text id="demo2" style = "color: #03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>,
+    <text id = "deadToday" style = "color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text> people died of the virus.</p>
+
+<br><br><br>
+
+<p style = "width: 35%;margin: auto;line-height:90%;color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">Contact: <a href = "mailto:hello@covid19mapped.org">hello@covid19mapped.org</a></p>
 
 <script>
     var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
     var slider = document.getElementById("myRange");
     var output = document.getElementById("demo");
+    var output2 = document.getElementById("demo2");
     var tod = document.getElementById('todayForLook');
     var todayString =  document.getElementById("hidString").innerText;
     output.innerHTML = slider.value;
@@ -125,60 +135,70 @@
         tod.innerHTML = temp;
         booly = 1
         output.innerHTML = new Date((this.value *(1000*3600*24)+firstD.getTime())).toDateString();
+        output2.innerHTML = new Date((this.value *(1000*3600*24)+firstD.getTime())).toDateString();
         reload();
-/*        document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText]
-        document.getElementById('addTo').innerHTML = 0;
-        for(var i =0; i<Number(document.getElementById('deadToday').innerText); i++){
+        document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText]
+        if(this.value == 2 || this.value == 3){
+          document.getElementById('deadParagraph').style = "display:none;"
+        }
+        else{
+          document.getElementById('deadParagraph').style = "line-height:90%;color:#03dac6;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        }
+//        document.getElementById('addTo').innerHTML = 0;
+        /*for(var i =0; i<Number(document.getElementById('deadToday').innerText); i++){
           document.getElementById('addTo').innerHTML += '<svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg>';
         }*/
     }
     if(booly == 0)
-        output.innerHTML = new Date(todayString).toDateString();
-        //document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText]
+        output.innerHTML = new Date((document.getElementById('myRange').value *(1000*3600*24)+firstD.getTime())).toDateString();
+        output2.innerHTML = new Date((document.getElementById('myRange').value *(1000*3600*24)+firstD.getTime())).toDateString();
+        document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText]
 </script>
 
 <script>
   
   var cD = JSON.parse(document.getElementById('cD').innerText);
+  var pD = JSON.parse(document.getElementById('pD').innerText);
   var max = document.getElementById('max').innerText;
   function getColor(count){
-    if (count < 0.001 * max)
-          return '#fff5f0'
-        else if(count < 0.005 * max)
-          return '#fee0d2'
-        else if(count < 0.01 * max)
-          return '#fcbba1'
-        else if(count < 0.02 * max)
-          return '#fc9272'
-        else if(count < 0.025 * max)
-          return '#fb6a4a'
-        else if(count < 0.03 * max)
-          return '#ef3b2c'
-        else if(count < 0.04 * max)
-          return '#cb181d'
-        else if(count < 0.50 * max)
-          return '#a50f15'
-        else if(count < 2 * max)
-          return '#67000d'
+    if (count < 0.005 * max)
+        return '#fff5f0'
+      else if(count < 0.03 * max)
+        return '#fee0d2'
+      else if(count < 0.08 * max)
+        return '#fcbba1'
+      else if(count < 0.13 * max)
+        return '#fc9272'
+      else if(count < 0.18 * max)
+        return '#fb6a4a'
+      else if(count < 0.24 * max)
+        return '#ef3b2c'
+      else if(count < 0.3 * max)
+        return '#cb181d'
+      else if(count < 0.5 * max)
+        return '#a50f15'
+      else if(count < 2 * max)
+        return '#67000d'
   };
   function generateColor(d){
     try{
       count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
-      if (count < 0.001 * max)
+      count/= pD[d.properties['name']];
+      if (count < 0.005 * max)
         return '#fff5f0'
-      else if(count < 0.005 * max)
-        return '#fee0d2'
-      else if(count < 0.01 * max)
-        return '#fcbba1'
-      else if(count < 0.02 * max)
-        return '#fc9272'
-      else if(count < 0.025 * max)
-        return '#fb6a4a'
       else if(count < 0.03 * max)
+        return '#fee0d2'
+      else if(count < 0.08 * max)
+        return '#fcbba1'
+      else if(count < 0.13 * max)
+        return '#fc9272'
+      else if(count < 0.18 * max)
+        return '#fb6a4a'
+      else if(count < 0.24 * max)
         return '#ef3b2c'
-      else if(count < 0.04 * max)
+      else if(count < 0.3 * max)
         return '#cb181d'
-      else if(count < 0.50 * max)
+      else if(count < 0.5 * max)
         return '#a50f15'
       else if(count < 2 * max)
         return '#67000d'
@@ -192,7 +212,7 @@
           return '#fff5f0'
       }
       else if(d.properties['name'] == 'Somaliland'){
-          try{count = cD['Somalia'][document.getElementById('todayForLook').innerText].Active}
+          try{count = cD['Somalia'][document.getElementById('todayForLook').innerText].Active/pD['Somalia']}
           catch(e){
             return "rgb(169,169,169)"
           }
