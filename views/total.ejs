@@ -83,7 +83,20 @@
         fill: red;
     }
     .country:hover{
-      stroke-width: 8;
+      stroke-width: 5;
+      cursor: pointer;
+    }
+    #overlay{
+      position: fixed;
+      border-radius: 15px;
+      display: none;
+      color:red;
+      width: 100px;
+      height: 115px;
+      top: 31%;
+      left: 38%;
+      background-color: rgba(13,13,13,1);
+      z-index: 2;
     }
   </style>
   <script src="https://unpkg.com/d3@5.16.0/dist/d3.min.js"></script>
@@ -113,6 +126,8 @@
     </div>
   </div>
 
+  <div id = 'overlay'><text style = "line-height:0%; font-size:40%; color:#FFDD3C;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+    id= "currCountry"></p></div>
 
   <input type="range" min="3" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider"
     id="myRange">
@@ -237,6 +252,32 @@
         return "rgb(169,169,169)";
       }
     }
+    var tempCountry;
+    function generatePopUp(d){
+        if(d.properties.name == 'Fiji'){
+          document.getElementById('overlay').style.display = "none";
+          return}
+      if(d.properties.name == tempCountry){
+        document.getElementById('overlay').style.display = "none";
+        tempCountry = "";
+        }
+      else{
+        document.getElementById('overlay').style.display = "block";
+        tempCountry = d.properties.name;
+      }
+      try{
+        temp = d.properties.name;
+        temp += " " + document.getElementById('demo').innerText + ":\n";
+        temp += "New Cases: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['New Cases'] + "\n";
+        temp += "New Deaths: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['NewDeaths'] + "\n";
+        temp += "Cases Hitherto: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['Cases'] + "\n";
+        temp += "Deaths Hitherto: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['Deaths'];
+        document.getElementById('currCountry').innerText = temp;
+      }
+      catch(e){
+        document.getElementById('overlay').style.display = "none";
+      }
+    }
     function generateTitle(d) {
 //      console.log(d);
       try {
@@ -265,7 +306,8 @@
       const pathGenerator = d3.geoPath().projection(projection);
       svg.append('path')
         .attr('class', 'sphere')
-        .attr('d', pathGenerator({ type: 'Sphere' }));
+        .attr('d', pathGenerator({ type: 'Sphere' }))
+        .on("click", d => generatePopUp(d));
       d3.json('https://unpkg.com/world-atlas@2.0.2/countries-110m.json')
         .then(data => {
           const countries = topojson.feature(data, data.objects.countries);
@@ -274,6 +316,7 @@
             .attr('class', 'country')
             .attr('d', pathGenerator)
             .attr('fill', d => generateColor(d))
+            .on("click", d => generatePopUp(d))
             .append('title').text(d => generateTitle(d));
         var g = svg.selectAll('path');
         svg.selectAll('circle').data(countries.features)
@@ -296,6 +339,17 @@
         g.attr('fill', d => generateColor(d));
         g.select('title').text(d => generateTitle(d));
         g2.attr('r', d => generateRadius(d));
+        try{
+          temp = tempCountry;
+          temp += " " + document.getElementById('demo').innerText + ":\n";
+          temp += "New Cases: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['New Cases'] + "\n";
+          temp += "New Deaths: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['NewDeaths'] + "\n";
+          temp += "Cases Hitherto: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['Cases'] + "\n";
+          temp += "Deaths Hitherto: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['Deaths'];
+          document.getElementById('currCountry').innerText = temp;
+        }
+        catch(e){
+        }
       }(d3, topojson));
     }
   </script>
