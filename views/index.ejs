@@ -220,11 +220,15 @@
           return '#67000d'
       }
       catch (e) {
-        //console.log(d.properties['name'])
+        console.log(d.properties['name'])
         if (d.properties['name'] == 'Greenland') {
           if (document.getElementById('todayForLook').innerText.substr(5, 2) == '03' && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) > 15)
             return '#fff5f0'
           else if (document.getElementById('todayForLook').innerText.substr(5, 2) == '04' && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) < 8)
+            return '#fff5f0'
+        }
+          else if (d.properties['name'] == 'Falkland Is.') {
+          if (document.getElementById('todayForLook').innerText.substr(5, 2) == '04' && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) > 2 && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) < 30)
             return '#fff5f0'
         }
         else if (d.properties['name'] == 'Somaliland') {
