@@ -91,7 +91,7 @@
   <div class="date">
     <p
       style="line-height:90%;word-wrap:break-word;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-      Active Covid19 Cases per Capita as of <text id="demo"
+      Active Covid19 Cases per Million as of <text id="demo"
         style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
     </p>
     <p
@@ -275,7 +275,7 @@
       //console.log(d);
       try {
         count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
-        return d.properties['name'] + " Active Cases per Capita on " + document.getElementById('demo').innerText + ":\n " + String((count/pD[d.properties['name']]).toFixed(2));
+        return d.properties['name'] + " Active Cases per Million on " + document.getElementById('demo').innerText + ":\n " + String((count/pD[d.properties['name']]).toFixed(2));
       }
       catch (e) {
         return 'No reported active cases on ' + document.getElementById('demo').innerText  + ' or insufficient data on ' + document.getElementById('demo').innerText;
