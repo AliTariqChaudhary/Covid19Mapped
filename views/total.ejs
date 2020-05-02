@@ -78,6 +78,10 @@
       width: 75%;
       height: 50%;
     }
+    .bubble {
+        fill-opacity: .4;
+        fill: red;
+    }
   </style>
   <script src="https://unpkg.com/d3@5.16.0/dist/d3.min.js"></script>
   <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.js"></script>
@@ -88,15 +92,15 @@
   <div class="date">
     <p
       style="line-height:90%;word-wrap:break-word;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-      Active Covid19 Cases per Capita as of <text id="demo"
+      Total Active Covid19 Cases as of <text id="demo"
         style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
     </p>
     <p
       style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
       Use the slider at the bottom to change the date.</p>
-      <a href = './total'><p
+      <a href = './'><p
       style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-      Click here to change to total cases.</p></a>
+      Click here to change to cases per capita.</p></a>
   </div>
 
   <div class='set_width'>
@@ -203,48 +207,10 @@
     var cD = JSON.parse(document.getElementById('cD').innerText);
     var pD = JSON.parse(document.getElementById('pD').innerText);
     var max = document.getElementById('max').innerText;
-    function getColor(count) {
-      if (count < 0.005 * max)
-        return '#fff5f0'
-      else if (count < 0.03 * max)
-        return '#fee0d2'
-      else if (count < 0.08 * max)
-        return '#fcbba1'
-      else if (count < 0.13 * max)
-        return '#fc9272'
-      else if (count < 0.18 * max)
-        return '#fb6a4a'
-      else if (count < 0.24 * max)
-        return '#ef3b2c'
-      else if (count < 0.3 * max)
-        return '#cb181d'
-      else if (count < 0.5 * max)
-        return '#a50f15'
-      else if (count < 2 * max)
-        return '#67000d'
-    };
     function generateColor(d) {
       try {
         count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
-        count /= pD[d.properties['name']];
-        if (count < 0.005 * max)
-          return '#fff5f0'
-        else if (count < 0.03 * max)
-          return '#fee0d2'
-        else if (count < 0.08 * max)
-          return '#fcbba1'
-        else if (count < 0.13 * max)
-          return '#fc9272'
-        else if (count < 0.18 * max)
-          return '#fb6a4a'
-        else if (count < 0.24 * max)
-          return '#ef3b2c'
-        else if (count < 0.3 * max)
-          return '#cb181d'
-        else if (count < 0.5 * max)
-          return '#a50f15'
-        else if (count < 2 * max)
-          return '#67000d'
+        return '#fff5f0'
       }
       catch (e) {
         //console.log(d.properties['name'])
@@ -259,24 +225,35 @@
             return '#fff5f0'
         }
         else if (d.properties['name'] == 'Somaliland') {
-          try { count = cD['Somalia'][document.getElementById('todayForLook').innerText].Active / pD['Somalia'] }
+          try { count = cD['Somalia'][document.getElementById('todayForLook').innerText].Active }
           catch (e) {
             return "rgb(169,169,169)"
           }
-          return getColor(count)
+          return '#fff5f0'
         }
         return "rgb(169,169,169)";
       }
     }
     function generateTitle(d) {
-      //console.log(d);
+//      console.log(d);
       try {
         count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
-        return d.properties['name'] + " Active Cases per Capita on " + document.getElementById('demo').innerText + ":\n " + String((count/pD[d.properties['name']]).toFixed(2));
+        return d.properties['name'] + " Total Active Cases on " + document.getElementById('demo').innerText + ":\n " + String(count);
       }
       catch (e) {
-        return 'No reported active cases on ' + document.getElementById('demo').innerText  + ' or insufficient data on ' + document.getElementById('demo').innerText;
+        return 'No reported active cases or insufficient data on ' + document.getElementById('demo').innerText;
       }
+    }
+    function generateRadius(d){
+        var max = document.getElementById('max').innerText;
+        try{
+            var cD = JSON.parse(document.getElementById('cD').innerText);
+            r = cD[d.properties['name']][document.getElementById('todayForLook').innerText]['Log Total'];
+            return r;
+        }
+        catch(e){
+            return 0;   
+        }
     }
     (function (d3, topojson) {
       'use strict';
@@ -295,6 +272,16 @@
             .attr('d', pathGenerator)
             .attr('fill', d => generateColor(d))
             .append('title').text(d => generateTitle(d));
+        var g = svg.selectAll('path');
+        svg.selectAll('circle').data(countries.features)
+            .enter().append('circle')
+            .attr('class', 'bubble')
+            .attr('r', d => generateRadius(d))
+        .attr('transform', function generateCentroid(d){
+//                return "translate(" + t + ")"
+            return "translate(" + pathGenerator.centroid(d) + ")";
+            
+    });
         });
     }(d3, topojson));
     function reload() {
@@ -302,8 +289,10 @@
         'use strict';
         const svg = d3.select('svg');
         var g = svg.selectAll('path');
+        var g2 = svg.selectAll('circle');
         g.attr('fill', d => generateColor(d));
         g.select('title').text(d => generateTitle(d));
+        g2.attr('r', d => generateRadius(d));
       }(d3, topojson));
     }
   </script>

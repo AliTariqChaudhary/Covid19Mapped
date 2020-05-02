@@ -251,24 +251,28 @@ async function getTotalData() {
 
 
 var max = 0;
-
+var totmax = 0;
 
 function getMaxCases() {
-  var temp = 0;
-  var temp1;
-  for (var key in DictFromSave) {
-    for (var i in DictFromSave[key]) {
-      if (key != 'San Marino')
-        if (DictFromSave[key][i].Active / popDict[key] > max) {
-          max = DictFromSave[key][i].Active / popDict[key];
-        }
+  return new Promise((resolve, reject) =>{
+    var temp = 0;
+    var temp1;
+    for (var key in DictFromSave) {
+      for (var i in DictFromSave[key]) {
+        if(DictFromSave[key][i].Active > totmax)
+          totmax = DictFromSave[key][i].Active;
+        if (key != 'San Marino')
+          if (DictFromSave[key][i].Active / popDict[key] > max) {
+            max = DictFromSave[key][i].Active / popDict[key];
+          }
+      }
+      if (key == "C�te d'Ivoire") {
+        DictFromSave["Côte d'Ivoire"] = DictFromSave["C�te d'Ivoire"];
+        delete DictFromSave["C�te d'Ivoire"];
+      }
     }
-    if (key == "C�te d'Ivoire") {
-      DictFromSave["Côte d'Ivoire"] = DictFromSave["C�te d'Ivoire"];
-      delete DictFromSave["C�te d'Ivoire"];
-    }
-  }
-
+    return resolve();
+  });
 }
 
 var DeathsDict = {};
@@ -294,10 +298,66 @@ function getDeathsbyDay() {
   }
 }
 
+var InfectDict = {};
+
+function getInfectbyDay() {
+  var tempkey;
+  var booly = 0;
+  for (var key in DictFromSave) {
+    for (var i in DictFromSave[key]) {
+      if (booly != 0) {
+        DictFromSave[key][i]['New Cases'] = DictFromSave[key][i].Cases - DictFromSave[key][tempkey].Cases;
+        if (!InfectDict[i]) {
+          InfectDict[i] = DictFromSave[key][i].Cases - DictFromSave[key][tempkey].Cases;
+        }
+        else {
+          InfectDict[i] += DictFromSave[key][i].Cases - DictFromSave[key][tempkey].Cases;
+        }
+      }
+      tempkey = i;
+      booly = 1;
+    }
+    booly = 0;
+  }
+}
+
+
+
+function getLogTotal(){
+  var booly = 0
+  var logT = 0;
+  for(var key in DictFromSave){
+    for(var i in DictFromSave[key]){
+      if (DictFromSave[key][i].Active < 0.005 * totmax)
+        logT = 3;
+      else if (DictFromSave[key][i].Active < 0.03 * totmax)
+        logT = 4;
+      else if (DictFromSave[key][i].Active < 0.08 * totmax)
+        logT = 9;
+      else if (DictFromSave[key][i].Active < 0.13 * totmax)
+       logT = 13;
+      else if (DictFromSave[key][i].Active < 0.18 * totmax)
+       logT = 18;
+      else if (DictFromSave[key][i].Active < 0.24 * totmax)
+        logT = 23;
+      else if (DictFromSave[key][i].Active < 0.3 * totmax)
+        logT = 28;
+      else if (DictFromSave[key][i].Active < 0.5 * totmax)
+        logT = 35;
+      else if (DictFromSave[key][i].Active < 2 * totmax)
+        logT = 40;
+      DictFromSave[key][i]['Log Total'] = logT
+    }
+  }
+}
+
 async function getMaxCases2() {
   await getFromSave();
-  getMaxCases();
+  await getMaxCases();
   getDeathsbyDay();
+  getInfectbyDay();
+  getLogTotal();
+  console.log('Ready');
 }
 
 getMaxCases2();
@@ -319,7 +379,14 @@ app.set('view engine', 'ejs');
 
 
 app.get('/', (req, res) => {
-  res.render('index', { totalDays: diff + 1, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(max), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict) });
+  res.render('index', { totalDays: diff + 1, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(max), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
 });
 
+app.get('/total', (req, res) => {
+  res.render('total', { totalDays: diff + 1, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(totmax), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
+});
+
+app.use(function(req, res, next){
+  res.status(404).send('No such page.');
+});
 app.listen(port, () => console.log(`Starting on port ${port}!`));
