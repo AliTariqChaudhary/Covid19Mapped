@@ -81,6 +81,19 @@
     .country:hover{
       stroke-width: 8;
     }
+    .overlay{
+      position: fixed;
+      border-radius: 15px;
+      display: block;
+      width: 10%;
+      height: 10%;
+      top: 30%;
+      left: 30%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 2;
+      cursor: pointer;
+    }
+
   </style>
   <script src="https://unpkg.com/d3@5.16.0/dist/d3.min.js"></script>
   <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.js"></script>
@@ -167,13 +180,13 @@
       temp = temp.substr(0, 12) + '0:00:00Z';
       tod.innerHTML = temp;
       booly = 1
-      output.innerHTML = new Date(((this.value-1) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-      output2.innerHTML = new Date(((this.value-1) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-      output3.innerHTML = new Date(((this.value-1) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output2.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output3.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
       reload();
       document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
       document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];
-      if (this.value == 2 || this.value == 3) {
+      if (this.value == 3 || this.value == 4) {
         document.getElementById('deadParagraph').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
         document.getElementById('demo3').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
         document.getElementById('infectToday').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
@@ -194,12 +207,12 @@
         document.getElementById('addTo').innerHTML += '<svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg>';
       }*/
     }
-    if (booly == 0)
-      output.innerHTML = new Date(((document.getElementById('myRange').value -1)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-    output2.innerHTML = new Date(((document.getElementById('myRange').value -1)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-    output3.innerHTML = new Date(((document.getElementById('myRange').value -1)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+    if (booly == 0){
+      output.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+    output2.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+    output3.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
     document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
-    document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];
+    document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];}
   </script>
 
   <script>
@@ -271,6 +284,9 @@
         return "rgb(169,169,169)";
       }
     }
+    function generatePopUp(d){
+
+    }
     function generateTitle(d) {
       //console.log(d);
       try {
@@ -297,6 +313,7 @@
             .attr('class', 'country')
             .attr('d', pathGenerator)
             .attr('fill', d => generateColor(d))
+            .on("click", d => generatePopUp())
             .append('title').text(d => generateTitle(d));
         });
     }(d3, topojson));

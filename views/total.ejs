@@ -171,9 +171,9 @@
       temp = temp.substr(0, 12) + '0:00:00Z';
       tod.innerHTML = temp;
       booly = 1
-      output.innerHTML = new Date(((this.value-1) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-      output2.innerHTML = new Date(((this.value-1) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-      output3.innerHTML = new Date(((this.value-1) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output2.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output3.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
       reload();
       document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
       document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];
@@ -199,9 +199,9 @@
       }*/
     }
     if (booly == 0)
-      output.innerHTML = new Date(((document.getElementById('myRange').value -1)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-    output2.innerHTML = new Date(((document.getElementById('myRange').value -1)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-    output3.innerHTML = new Date(((document.getElementById('myRange').value -1)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+    output2.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+    output3.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
     document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
     document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];
   </script>
