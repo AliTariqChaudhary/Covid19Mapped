@@ -6,13 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165025055-1"></script>
-  <link rel="shortcut icon" type="image/png" href="https://imgur.com/a/XzxgAbA">
+  <link rel="shortcut icon" type="image/jpg" href="https://i.imgur.com/LARhjLL.jpg">
 
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'UA-165025055-1');
   </script>
 
@@ -21,12 +20,10 @@
     .sphere {
       fill: #0986af;
     }
-
     .country {
       stroke: black;
       stroke-opacity: 0.1;
     }
-
     .date {
       margin: auto;
       border: 2px solid #054E66;
@@ -35,11 +32,9 @@
       line-height: 5%;
       position: static;
     }
-
     .slidecontainer {
       width: 100%;
     }
-
     .slider {
       -webkit-appearance: none;
       width: 90%;
@@ -52,11 +47,9 @@
       -webkit-transition: .2s;
       transition: opacity .2s;
     }
-
     .slider:hover {
       opacity: 1;
     }
-
     .slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
@@ -66,7 +59,6 @@
       background: #ff0000;
       cursor: pointer;
     }
-
     .slider::-moz-range-thumb {
       width: 25px;
       height: 25px;
@@ -74,7 +66,6 @@
       background: #0986af;
       cursor: pointer;
     }
-
     .on_top {
       top: 0;
       left: 0;
@@ -82,7 +73,6 @@
       right: 0;
       /*expand this div to the size of its parent*/
     }
-
     .set_width {
       margin-left: 12.5%;
       width: 75%;
@@ -114,7 +104,7 @@
   </div>
 
 
-  <input type="range" min="2" max="<%= locals.totalDays %>-1" value="<%= locals.totalDays %>" class="slider"
+  <input type="range" min="2" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider"
     id="myRange">
 
 
@@ -157,12 +147,12 @@
     document.getElementById('todayForLook').innerText = temp2;
     var booly = 0;
     slider.oninput = function () {
-      temp = new Date(new Date(((this.value - 2) * (1000 * 3600 * 24) + firstD.getTime())).toLocaleString('en-US', { timeZone: 'UTC' })).toISOString()
+      temp = new Date(new Date(((this.value - 3) * (1000 * 3600 * 24) + firstD.getTime())).toLocaleString('en-US', { timeZone: 'UTC' })).toISOString()
       temp = temp.substr(0, 12) + '0:00:00Z';
       tod.innerHTML = temp;
       booly = 1
-      output.innerHTML = new Date((this.value * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-      output2.innerHTML = new Date((this.value * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output.innerHTML = new Date(((this.value-1) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output2.innerHTML = new Date(((this.value-1) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
       reload();
       document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText]
       if (this.value == 2 || this.value == 3) {
@@ -177,13 +167,12 @@
       }*/
     }
     if (booly == 0)
-      output.innerHTML = new Date((document.getElementById('myRange').value * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-    output2.innerHTML = new Date((document.getElementById('myRange').value * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output.innerHTML = new Date(((document.getElementById('myRange').value -1)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+    output2.innerHTML = new Date(((document.getElementById('myRange').value -1)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
     document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText]
   </script>
 
   <script>
-
     var cD = JSON.parse(document.getElementById('cD').innerText);
     var pD = JSON.parse(document.getElementById('pD').innerText);
     var max = document.getElementById('max').innerText;
@@ -260,14 +249,11 @@
     (function (d3, topojson) {
       'use strict';
       const svg = d3.select('svg');
-
       const projection = d3.geoNaturalEarth1();
       const pathGenerator = d3.geoPath().projection(projection);
-
       svg.append('path')
         .attr('class', 'sphere')
         .attr('d', pathGenerator({ type: 'Sphere' }));
-
       d3.json('https://unpkg.com/world-atlas@2.0.2/countries-110m.json')
         .then(data => {
           const countries = topojson.feature(data, data.objects.countries);
@@ -279,7 +265,6 @@
             /*.append('title').text(d => generateTitle(d))*/;
         });
     }(d3, topojson));
-
     function reload() {
       (function (d3, topojson) {
         'use strict';
