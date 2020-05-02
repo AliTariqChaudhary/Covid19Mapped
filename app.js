@@ -379,11 +379,11 @@ app.set('view engine', 'ejs');
 
 
 app.get('/', (req, res) => {
-  res.render('index', { totalDays: diff + 1, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(max), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
+  res.render('index', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(max), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
 });
 
 app.get('/total', (req, res) => {
-  res.render('total', { totalDays: diff + 1, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(totmax), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
+  res.render('total', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(totmax), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
 });
 
 app.use(function(req, res, next){
