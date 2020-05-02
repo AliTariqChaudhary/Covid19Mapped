@@ -278,7 +278,7 @@
         return d.properties['name'] + " Active Cases per Million on " + document.getElementById('demo').innerText + ":\n " + String((count/pD[d.properties['name']]).toFixed(2));
       }
       catch (e) {
-        return 'No reported active cases on ' + document.getElementById('demo').innerText  + ' or insufficient data on ' + document.getElementById('demo').innerText;
+        return 'No reported active cases or insufficient data on ' + document.getElementById('demo').innerText;
       }
     }
     (function (d3, topojson) {
