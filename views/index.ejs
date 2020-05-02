@@ -220,7 +220,7 @@
           return '#67000d'
       }
       catch (e) {
-        console.log(d.properties['name'])
+        //console.log(d.properties['name'])
         if (d.properties['name'] == 'Greenland') {
           if (document.getElementById('todayForLook').innerText.substr(5, 2) == '03' && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) > 15)
             return '#fff5f0'
@@ -242,12 +242,13 @@
       }
     }
     function generateTitle(d) {
+      //console.log(d);
       try {
         count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
-        return "Active Cases on " + document.getElementById('demo').innerText + ": " + String(count);
+        return "Active Cases per Capita on " + document.getElementById('demo').innerText + ": " + String((count/pD[d.properties['name']]).toFixed(2));
       }
       catch (e) {
-        return '';
+        return 'No reported active cases or insufficient data on ' + document.getElementById('demo').innerText;
       }
     }
     (function (d3, topojson) {
@@ -266,7 +267,8 @@
             .attr('class', 'country')
             .attr('d', pathGenerator)
             .attr('fill', d => generateColor(d))
-            /*.append('title').text(d => generateTitle(d))*/;
+            .append('title').text(d => generateTitle(d));
+          console.log(svg.selectAll('path').data(countries.features));
         });
     }(d3, topojson));
     function reload() {
@@ -274,6 +276,8 @@
         'use strict';
         const svg = d3.select('svg');
         svg.selectAll('path').attr('fill', d => generateColor(d));
+        var tempArr = svg.selectAll('path');
+        tempArr.select('title').text(d => generateTitle(d));
       }(d3, topojson));
     }
   </script>
