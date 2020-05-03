@@ -78,6 +78,10 @@
       width: 75%;
       height: 50%;
     }
+    .bubble {
+        fill-opacity: .4;
+        fill: red;
+    }
     .country:hover{
       stroke-width: 5;
       cursor: pointer;
@@ -94,7 +98,6 @@
       background-color: rgba(13,13,13,1);
       z-index: 2;
     }
-
   </style>
   <script src="https://unpkg.com/d3@5.16.0/dist/d3.min.js"></script>
   <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.js"></script>
@@ -105,18 +108,18 @@
   <div class="date">
     <p
       style="line-height:90%;word-wrap:break-word;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-      Total Active Covid19 Cases as of  <text id="demo"
+      Bubble Map of Total Active Covid19 Cases as of <text id="demo"
         style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
     </p>
     <p
       style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
       Use the slider at the bottom to change the date.</p>
       <a href = './'><p
+      style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+      Click here to change to cases per capita.</p></a>
+      <a href = './'><p
         style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-        Click here to change to cases per capita.</p></a>
-        <a href = './totalbubble'><p
-          style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-          Click here to change to cases to a bubble map of total cases.</p></a>
+        Click here to change to a color map of total cases.</p></a>
   </div>
 
   <div class='set_width'>
@@ -127,7 +130,7 @@
   </div>
 
   <div id = 'overlay'><text style = "line-height:0%; font-size:40%; color:#FFDD3C;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
-     id= "currCountry"></p></div>
+    id= "currCountry"></p></div>
 
   <input type="range" min="3" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider"
     id="myRange">
@@ -143,7 +146,7 @@
   <p id="dD" hidden><%= locals.dD%></p>
   <p id="pD" hidden><%= locals.pD%></p>
   <p id="iD" hidden><%= locals.iD%></p>
-  
+
   <br><br>
 
   <p id='deadParagraph'
@@ -191,7 +194,7 @@
       reload();
       document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
       document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];
-      if (this.value == 3 || this.value == 4) {
+      if (this.value == 2 || this.value == 3) {
         document.getElementById('deadParagraph').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
         document.getElementById('demo3').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
         document.getElementById('infectToday').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
@@ -212,60 +215,23 @@
         document.getElementById('addTo').innerHTML += '<svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg>';
       }*/
     }
-    if (booly == 0){
+    if (booly == 0)
       output.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
     output2.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
     output3.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
     document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
-    document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];}
+    document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];
   </script>
 
   <script>
     var cD = JSON.parse(document.getElementById('cD').innerText);
     var pD = JSON.parse(document.getElementById('pD').innerText);
     var max = document.getElementById('max').innerText;
-    function getColor(count){
-    if (count < 0.001 * max)
-          return '#fff5f0'
-        else if(count < 0.005 * max)
-          return '#fee0d2'
-        else if(count < 0.01 * max)
-          return '#fcbba1'
-        else if(count < 0.02 * max)
-          return '#fc9272'
-        else if(count < 0.025 * max)
-          return '#fb6a4a'
-        else if(count < 0.03 * max)
-          return '#ef3b2c'
-        else if(count < 0.04 * max)
-          return '#cb181d'
-        else if(count < 0.50 * max)
-          return '#a50f15'
-        else if(count < 2 * max)
-          return '#67000d'
-  };
-  function generateColor(d){
-    try{
-      count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
-      if (count < 0.001 * max)
+    function generateColor(d) {
+      try {
+        count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
         return '#fff5f0'
-      else if(count < 0.005 * max)
-        return '#fee0d2'
-      else if(count < 0.01 * max)
-        return '#fcbba1'
-      else if(count < 0.02 * max)
-        return '#fc9272'
-      else if(count < 0.025 * max)
-        return '#fb6a4a'
-      else if(count < 0.03 * max)
-        return '#ef3b2c'
-      else if(count < 0.04 * max)
-        return '#cb181d'
-      else if(count < 0.50 * max)
-        return '#a50f15'
-      else if(count < 2 * max)
-        return '#67000d'
-    }
+      }
       catch (e) {
         //console.log(d.properties['name'])
         if (d.properties['name'] == 'Greenland') {
@@ -279,11 +245,11 @@
             return '#fff5f0'
         }
         else if (d.properties['name'] == 'Somaliland') {
-          try { count = cD['Somalia'][document.getElementById('todayForLook').innerText].Active / pD['Somalia'] }
+          try { count = cD['Somalia'][document.getElementById('todayForLook').innerText].Active }
           catch (e) {
             return "rgb(169,169,169)"
           }
-          return getColor(count)
+          return '#fff5f0'
         }
         return "rgb(169,169,169)";
       }
@@ -315,7 +281,7 @@
       }
     }
     function generateTitle(d) {
-      //console.log(d);
+//      console.log(d);
       try {
         count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
         return d.properties['name'] + " Total Active Cases on " + document.getElementById('demo').innerText + ":\n " + String(count);
@@ -323,6 +289,17 @@
       catch (e) {
         return 'No reported active cases or insufficient data on ' + document.getElementById('demo').innerText;
       }
+    }
+    function generateRadius(d){
+        var max = document.getElementById('max').innerText;
+        try{
+            var cD = JSON.parse(document.getElementById('cD').innerText);
+            r = cD[d.properties['name']][document.getElementById('todayForLook').innerText]['Log Total'];
+            return r;
+        }
+        catch(e){
+            return 0;   
+        }
     }
     (function (d3, topojson) {
       'use strict';
@@ -343,6 +320,16 @@
             .attr('fill', d => generateColor(d))
             .on("click", d => generatePopUp(d))
             .append('title').text(d => generateTitle(d));
+        var g = svg.selectAll('path');
+        svg.selectAll('circle').data(countries.features)
+            .enter().append('circle')
+            .attr('class', 'bubble')
+            .attr('r', d => generateRadius(d))
+        .attr('transform', function generateCentroid(d){
+//                return "translate(" + t + ")"
+            return "translate(" + pathGenerator.centroid(d) + ")";
+            
+    });
         });
     }(d3, topojson));
     function reload() {
@@ -350,8 +337,10 @@
         'use strict';
         const svg = d3.select('svg');
         var g = svg.selectAll('path');
+        var g2 = svg.selectAll('circle');
         g.attr('fill', d => generateColor(d));
         g.select('title').text(d => generateTitle(d));
+        g2.attr('r', d => generateRadius(d));
         try{
           temp = tempCountry;
           temp += " " + document.getElementById('demo').innerText + ":\n";

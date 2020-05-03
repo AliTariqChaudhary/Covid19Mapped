@@ -386,6 +386,10 @@ app.get('/total', (req, res) => {
   res.render('total', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(totmax), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
 });
 
+app.get('/totalbubble', (req, res) => {
+  res.render('totalBubble', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(totmax), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
+});
+
 app.use(function(req, res, next){
   res.status(404).send('No such page.');
 });
