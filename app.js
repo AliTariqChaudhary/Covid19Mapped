@@ -16,6 +16,7 @@ const port = process.env.PORT || 3000;
 
 var firstD = new Date('January 22, 2020');
 var today = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/Los_Angeles'}));
+console.log((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
 diff = Math.floor((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
 todayString = today.toDateString();
 
@@ -369,11 +370,11 @@ schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
   await (sleep(10000))
   await getMaxCases2();
   today = new Date(new Date().toUTCString());
-  diff = Math.floor((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
+  console.log((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
+  dif += 1;
   todayString = today.toDateString();
 
 })
-
 
 app.set('view engine', 'ejs');
 
