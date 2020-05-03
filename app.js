@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 //app.use(favicon(__dirname + '/views/images/favicon.png'));
 
 
-var firstD = new Date(new Date('January 22, 2020').toLocaleString('en-US', {timeZone: 'America/Los_Angeles'}));
+var firstD = new Date('January 22, 2020');
 var today = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/Los_Angeles'}));
 diff = Math.floor((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
 todayString = today.toDateString();
