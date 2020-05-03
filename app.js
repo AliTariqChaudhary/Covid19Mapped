@@ -17,7 +17,8 @@ const port = process.env.PORT || 3000;
 var firstD = new Date('January 22, 2020');
 var today = new Date(new Date().toUTCString());
 diff = Math.floor((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
-todayString = today.toDateString();
+var today2 = new Date()
+todayString = today2.toDateString();
 
 var countryDict = {
   'Afghanistan': {}, 'Antarctica': {}, 'Albania': {}, 'Algeria': {}, 'Andorra': {}, 'Angola': {}, 'Antigua and Barbuda': {}, 'Argentina': {}, 'Armenia': {}, 'Australia': {}, 'Austria': {}, 'Azerbaijan': {}, 'Bahamas': {}, 'Bahrain': {}, 'Bangladesh': {}, 'Barbados': {}, 'Belarus': {}, 'Belgium': {},
