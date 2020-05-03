@@ -230,15 +230,15 @@
         return '#fcbba1'
       else if (count < 0.13 * max)
         return '#fc9272'
-      else if (count < 0.18 * max)
+      else if (count < 0.19 * max)
         return '#fb6a4a'
-      else if (count < 0.24 * max)
+      else if (count < 0.25 * max)
         return '#ef3b2c'
-      else if (count < 0.3 * max)
+      else if (count < 0.32 * max)
         return '#cb181d'
-      else if (count < 0.5 * max)
+      else if (count < 0.55 * max)
         return '#a50f15'
-      else if (count < 2 * max)
+      else if (count < 3 * max)
         return '#67000d'
     };
     function generateColor(d) {
@@ -246,23 +246,23 @@
         count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
         count /= pD[d.properties['name']];
         if (count < 0.005 * max)
-          return '#fff5f0'
-        else if (count < 0.03 * max)
-          return '#fee0d2'
-        else if (count < 0.08 * max)
-          return '#fcbba1'
-        else if (count < 0.13 * max)
-          return '#fc9272'
-        else if (count < 0.18 * max)
-          return '#fb6a4a'
-        else if (count < 0.24 * max)
-          return '#ef3b2c'
-        else if (count < 0.3 * max)
-          return '#cb181d'
-        else if (count < 0.5 * max)
-          return '#a50f15'
-        else if (count < 2 * max)
-          return '#67000d'
+        return '#fff5f0'
+      else if (count < 0.03 * max)
+        return '#fee0d2'
+      else if (count < 0.08 * max)
+        return '#fcbba1'
+      else if (count < 0.13 * max)
+        return '#fc9272'
+      else if (count < 0.19 * max)
+        return '#fb6a4a'
+      else if (count < 0.25 * max)
+        return '#ef3b2c'
+      else if (count < 0.32 * max)
+        return '#cb181d'
+      else if (count < 0.55 * max)
+        return '#a50f15'
+      else if (count < 3 * max)
+        return '#67000d'
       }
       catch (e) {
         //console.log(d.properties['name'])
