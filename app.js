@@ -84,7 +84,7 @@ function sleep(ms) {
 }
 
 function doRequest(key) {
-  tempURL = 'https://api.covid19api.com/total/dayone/country/' + key + '/status/confirmed';
+  tempURL = 'https://api.covid19api.com/dayone/country/' + key;
   return new Promise((resolve, reject) => {
     let req = https.get(tempURL, (res) => {
       const { statusCode } = res;
@@ -110,107 +110,25 @@ function doRequest(key) {
       res.on('data', (chunk) => { rawData += chunk; });
       res.on('end', () => {
         try {
+          var booly = 0;
           parsedData = JSON.parse(rawData);
           for (var i = 0; i < parsedData.length; i++) {
-            countryDict[key][parsedData[i].Date] = { 'Cases': parsedData[i].Cases };
+            if(countryDict[key][parsedData[i].Date])
+              {
+                countryDict[key][parsedData[i].Date]['Cases'] += parsedData[i].Confirmed ;
+                countryDict[key][parsedData[i].Date]['Deaths'] += parsedData[i].Deaths;
+                countryDict[key][parsedData[i].Date]['Recovered'] += parsedData[i].Recovered;  
+                countryDict[key][parsedData[i].Date]['Active'] += parsedData[i].Active;
+              }
+            else
+            {
+              countryDict[key][parsedData[i].Date] = { 'Cases': parsedData[i].Confirmed };
+              countryDict[key][parsedData[i].Date]['Deaths'] = parsedData[i].Deaths;
+              countryDict[key][parsedData[i].Date]['Recovered'] = parsedData[i].Recovered;
+              countryDict[key][parsedData[i].Date]['Active'] = parsedData[i].Active;
+            }
           }
-        } catch (e) {
-          console.error(e.message);
-        }
-      });
-    }).on('error', (e) => {
-      console.error(`Got error: ${e.message}`);
-    });
-
-    req.on('response', res => {
-      resolve(res);
-    });
-
-    req.on('error', err => {
-      reject(err);
-    });
-  });
-}
-
-function doRequest2(key) {
-  tempURL2 = 'https://api.covid19api.com/total/dayone/country/' + key + '/status/deaths';
-  return new Promise((resolve, reject) => {
-    let req = https.get(tempURL2, (res) => {
-      const { statusCode } = res;
-      const contentType = res.headers['content-type'];
-      let error;
-      if (statusCode !== 200) {
-        error = new Error('Request Failed.\n' +
-          `Status Code: ${statusCode}`);
-      } else if (!/^application\/json/.test(contentType)) {
-        error = new Error('Invalid content-type.\n' +
-          `Expected application/json but received ${contentType}`);
-      }
-      if (error) {
-        console.error(error.message);
-        // Consume response data to free up memory
-        res.resume();
-        return;
-      }
-
-      res.setEncoding('utf8');
-      let rawData = '';
-      res.on('data', (chunk) => { rawData += chunk; });
-      res.on('end', () => {
-        try {
-          parsedData = JSON.parse(rawData);
-          for (var i = 0; i < parsedData.length; i++) {
-            countryDict[key][parsedData[i].Date]['Deaths'] = parsedData[i].Cases;
-          }
-        } catch (e) {
-          console.error(e.message);
-        }
-      });
-    }).on('error', (e) => {
-      console.error(`Got error: ${e.message}`);
-    });
-
-    req.on('response', res => {
-      resolve(res);
-    });
-
-    req.on('error', err => {
-      reject(err);
-    });
-  });
-}
-
-function doRequest3(key) {
-  tempURL2 = 'https://api.covid19api.com/total/dayone/country/' + key + '/status/recovered';
-  return new Promise((resolve, reject) => {
-    let req = https.get(tempURL2, (res) => {
-      const { statusCode } = res;
-      const contentType = res.headers['content-type'];
-      let error;
-      if (statusCode !== 200) {
-        error = new Error('Request Failed.\n' +
-          `Status Code: ${statusCode}`);
-      } else if (!/^application\/json/.test(contentType)) {
-        error = new Error('Invalid content-type.\n' +
-          `Expected application/json but received ${contentType}`);
-      }
-      if (error) {
-        console.error(error.message);
-        // Consume response data to free up memory
-        res.resume();
-        return;
-      }
-
-      res.setEncoding('utf8');
-      let rawData = '';
-      res.on('data', (chunk) => { rawData += chunk; });
-      res.on('end', () => {
-        try {
-          parsedData = JSON.parse(rawData);
-          for (var i = 0; i < parsedData.length; i++) {
-            countryDict[key][parsedData[i].Date]['Recovered'] = parsedData[i].Cases;
-            countryDict[key][parsedData[i].Date]['Active'] = countryDict[key][parsedData[i].Date]['Cases'] - countryDict[key][parsedData[i].Date]['Deaths'] - parsedData[i].Cases;
-          }
+          console.log(parsedData.length)
         } catch (e) {
           console.error(e.message);
         }
@@ -234,8 +152,6 @@ async function getData() {
   for (var key in countryDict) {
     console.log(key);
     await doRequest(key);
-    await doRequest2(key);
-    await doRequest3(key);
   }
   fs.writeFile("countryDict.txt", JSON.stringify(countryDict), 'binary', (err) => {
     if (err) console.log(err)
@@ -367,19 +283,22 @@ getMaxCases2();
 
 schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
   await getData();
-  await (sleep(10000))
+  await (sleep(1000000))
   await getMaxCases2();
   today = new Date(new Date().toUTCString());
   console.log((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
-  dif += 1;
+  diff += 1;
   todayString = today.toDateString();
 
 })
+
+
 
 app.set('view engine', 'ejs');
 
 
 app.get('/', (req, res) => {
+  console.log(JSON.stringify(countryDict));
   res.render('index', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(max), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
 });
 
@@ -390,6 +309,11 @@ app.get('/total', (req, res) => {
 app.get('/totalbubble', (req, res) => {
   res.render('totalBubble', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(totmax), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
 });
+
+app.get('/US', (req, res) => {
+  res.render('US.ejs', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(max), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
+});
+
 
 app.use(function(req, res, next){
   res.status(404).send('No such page.');

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<head>
+  <meta name="keywords"
+    content="Covid19, Mapped, Map, Cases, Active, Deaths, Tracker, Tracked, Mapper, Count, Counter, Coronavirus, Novel Coronaviurs, Sars-Cov-2">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165025055-1"></script>
+  <link rel="shortcut icon" type="image/jpg" href="https://i.imgur.com/LARhjLL.jpg">
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'UA-165025055-1');
+  </script>
+
+  <title>Interactive Covid19 Map</title>
+  <style>
+    .sphere {
+      fill: #0986af;
+    }
+    .country {
+      stroke: black;
+      stroke-opacity: 0.1;
+    }
+    .date {
+      margin: auto;
+      border: 2px solid #054E66;
+      padding: 1px;
+      text-align: center;
+      line-height: 5%;
+      position: static;
+    }
+    .slidecontainer {
+      width: 100%;
+    }
+    .slider {
+      -webkit-appearance: none;
+      width: 90%;
+      margin-left: 5%;
+      height: 15px;
+      border-radius: 5px;
+      background: #054E66;
+      outline: none;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+    .slider:hover {
+      opacity: 1;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #ff0000;
+      cursor: pointer;
+    }
+    .slider::-moz-range-thumb {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: #0986af;
+      cursor: pointer;
+    }
+    .on_top {
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      /*expand this div to the size of its parent*/
+    }
+    .set_width {
+      margin-left: 12.5%;
+      width: 75%;
+      height: 50%;
+    }
+    .state:hover{
+      stroke-width: 5;
+      cursor: pointer;
+    }
+    #overlay{
+      position:absolute;
+      border-radius: 10px;
+      display: none;
+      color:red;
+      width: 100px;
+      height: 115px;
+      top: 31%;
+      left: 38%;
+      background-color: rgba(13,13,13,1);
+      z-index: 2;
+    }
+
+  </style>
+  <script src="https://unpkg.com/d3@5.16.0/dist/d3.min.js"></script>
+  <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.js"></script>
+
+</head>
+
+<body id='body' style="background-color:#D8DEE9;">
+  <div class="date">
+    <p
+      style="line-height:90%;word-wrap:break-word;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+      Active Covid19 Cases per Million as of <text id="demo"
+        style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
+    </p>
+    <p
+      style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+      Use the slider at the bottom to change the date.</p>
+      <a href = './total'><p
+      style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+      Click here to change to total cases.</p></a>
+  </div>
+
+  <div class='set_width'>
+    <div class='on_top'>
+      <svg viewBox="0 0 960 500">
+      </svg>
+    </div>
+  </div>
+
+  <div id = 'overlay'><text style = "line-height:0%; font-weight: bold; font-size:40%; color:#FFDD3C;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+     id= "currCountry"></p></div>
+
+  <input type="range" min="3" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider"
+    id="myRange">
+
+
+  <p id='hidString' hidden><%= locals.todayString %></p>
+  <p id="cD" hidden> <%= locals.cd%> </p>
+  <p id="max" hidden><%= locals.max%> </p>
+  <p id="todayForLook" hidden><%= locals.todayString %></p>
+  <p id="totalDays" hidden><%= locals.totalDays %></p>
+  <p id="todaytoday" hidden></p>
+  <!--<p id = "deadToday" hidden></p>-->
+  <p id="dD" hidden><%= locals.dD%></p>
+  <p id="pD" hidden><%= locals.pD%></p>
+  <p id="iD" hidden><%= locals.iD%></p>
+  
+  <br><br>
+
+  <p id='deadParagraph'
+    style="line-height:90%;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+    On <text id="demo2"
+      style="color: #054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>,
+    <text id="deadToday"
+      style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
+    people died from the virus, and
+
+    <text id='infectParagraph'
+    style="line-height:90%;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+    <text id="demo3"
+      style="color: #054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif" hidden></text><text id="infectToday"
+      style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
+    more people were confirmed infected.</text></p>
+
+  <br><br><br>
+
+  <p
+    style="width: 35%;margin: auto;line-height:90%;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+    Contact: <a href="mailto:hello@covid19mapped.org">hello@covid19mapped.org</a></p>
+
+  <script>
+    var firstD = new Date('January 22, 2020 00:00:00 GMT+00:00');
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("demo");
+    var output2 = document.getElementById("demo2");
+    var output3 = document.getElementById("demo3");
+    var tod = document.getElementById('todayForLook');
+    var todayString = document.getElementById("hidString").innerText;
+    output.innerHTML = slider.value;
+    temp2 = new Date(new Date(((Number(document.getElementById('totalDays').innerText) - 3) * (1000 * 3600 * 24) + firstD.getTime())).toLocaleString('en-US', { timeZone: 'UTC' })).toISOString();
+    temp2 = temp2.substr(0, 12) + '0:00:00Z';
+    document.getElementById('todayForLook').innerText = temp2;
+    var booly = 0;
+    slider.oninput = function () {
+      temp = new Date(new Date(((this.value - 3) * (1000 * 3600 * 24) + firstD.getTime())).toLocaleString('en-US', { timeZone: 'UTC' })).toISOString()
+      temp = temp.substr(0, 12) + '0:00:00Z';
+      tod.innerHTML = temp;
+      booly = 1
+      output.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output2.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      output3.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+      reload();
+      document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
+      document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];
+      if (this.value == 3 || this.value == 4) {
+        document.getElementById('deadParagraph').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        document.getElementById('demo3').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        document.getElementById('infectToday').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        document.getElementById('infectParagraph').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        document.getElementById('demo2').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        document.getElementById('deadToday').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+      }
+      else {
+        document.getElementById('deadParagraph').style = "color:#054E66;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        document.getElementById('demo3').style = "color:#054E66;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        document.getElementById('infectToday').style = "color:red;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        document.getElementById('infectParagraph').style = "color:#054E66;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        document.getElementById('demo2').style = "color:#054E66;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+        document.getElementById('deadToday').style = "color:red;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+      }
+      //        document.getElementById('addTo').innerHTML = 0;
+      /*for(var i =0; i<Number(document.getElementById('deadToday').innerText); i++){
+        document.getElementById('addTo').innerHTML += '<svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg><svg version="1.1" id="Capa_1" fill = "red" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="5px" height="5px" viewBox="0 0 125.2 125.2" style="enable-background:new 0 0 125.2 125.2;" xml:space="preserve"><g><path d="M52.65,125.2h19.9c3.3,0,6-2.7,6-6V86.301h3.399c3.301,0,6-2.701,6-6V43.2c0-3.3-2.699-6-6-6H43.25c-3.3,0-6,2.7-6,6v37.101c0,3.299,2.7,6,6,6h3.4V119.2C46.65,122.5,49.25,125.2,52.65,125.2z"/><circle cx="62.55" cy="15.7" r="15.7"/></g></svg>';
+      }*/
+    }
+    if (booly == 0){
+      output.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+    output2.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+    output3.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
+    document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
+    document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];}
+  </script>
+
+  <script>
+    var cD = JSON.parse(document.getElementById('cD').innerText);
+    var pD = JSON.parse(document.getElementById('pD').innerText);
+    var max = document.getElementById('max').innerText;
+    function getColor(count) {
+      if (count < 0.005 * max)
+        return '#fff5f0'
+      else if (count < 0.03 * max)
+        return '#fee0d2'
+      else if (count < 0.08 * max)
+        return '#fcbba1'
+      else if (count < 0.13 * max)
+        return '#fc9272'
+      else if (count < 0.19 * max)
+        return '#fb6a4a'
+      else if (count < 0.25 * max)
+        return '#ef3b2c'
+      else if (count < 0.32 * max)
+        return '#cb181d'
+      else if (count < 0.55 * max)
+        return '#a50f15'
+      else if (count < 3 * max)
+        return '#67000d'
+    };
+    function generateColor(d) {
+      try {
+        count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
+        count /= pD[d.properties['name']];
+        if (count < 0.005 * max)
+        return '#fff5f0'
+      else if (count < 0.03 * max)
+        return '#fee0d2'
+      else if (count < 0.08 * max)
+        return '#fcbba1'
+      else if (count < 0.13 * max)
+        return '#fc9272'
+      else if (count < 0.19 * max)
+        return '#fb6a4a'
+      else if (count < 0.25 * max)
+        return '#ef3b2c'
+      else if (count < 0.32 * max)
+        return '#cb181d'
+      else if (count < 0.55 * max)
+        return '#a50f15'
+      else if (count < 3 * max)
+        return '#67000d'
+      }
+      catch (e) {
+        //console.log(d.properties['name'])
+        if (d.properties['name'] == 'Greenland') {
+          if (document.getElementById('todayForLook').innerText.substr(5, 2) == '03' && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) > 15)
+            return '#fff5f0'
+          else if (document.getElementById('todayForLook').innerText.substr(5, 2) == '04' && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) < 8)
+            return '#fff5f0'
+        }
+          else if (d.properties['name'] == 'Falkland Is.') {
+          if (document.getElementById('todayForLook').innerText.substr(5, 2) == '04' && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) > 2 && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) < 30)
+            return '#fff5f0'
+        }
+        else if (d.properties['name'] == 'Somaliland') {
+          try { count = cD['Somalia'][document.getElementById('todayForLook').innerText].Active / pD['Somalia'] }
+          catch (e) {
+            return "rgb(169,169,169)"
+          }
+          return getColor(count)
+        }
+        return "rgb(169,169,169)";
+      }
+    }
+    var tempCountry;
+    function generatePopUp(d){
+        if(d.properties.name == 'Fiji'){
+          document.getElementById('overlay').style.display = "none";
+          return}
+      if(d.properties.name == tempCountry){
+        document.getElementById('overlay').style.display = "none";
+        tempCountry = "";
+        }
+      else{
+        document.getElementById('overlay').style.display = "block";
+        tempCountry = d.properties.name;
+      }
+      try{
+        temp = d.properties.name;
+        temp += " " + document.getElementById('demo').innerText + ":\n";
+        temp += "New Cases: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['New Cases'] + "\n";
+        temp += "New Deaths: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['NewDeaths'] + "\n";
+        temp += "Cases Hitherto: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['Cases'] + "\n";
+        temp += "Deaths Hitherto: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['Deaths'];
+        document.getElementById('currCountry').innerText = temp;
+      }
+      catch(e){
+        document.getElementById('overlay').style.display = "none";
+      }
+    }
+    function generateTitle(d) {
+      //console.log(d);
+      try {
+        count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
+        return d.properties['name'] + " Active Cases per Million on " + document.getElementById('demo').innerText + ":\n " + String((count/pD[d.properties['name']]).toFixed(2));
+      }
+      catch (e) {
+        return 'No reported active cases or insufficient data on ' + document.getElementById('demo').innerText;
+      }
+    }
+    (function (d3, topojson) {
+      'use strict';
+      const svg = d3.select('svg');
+      const projection = d3.geoAlbersUsa();
+      const pathGenerator = d3.geoPath().projection(projection);
+      svg.append('path')
+        .attr('class', 'sphere')
+        .attr('d', pathGenerator({ type: 'Sphere' }))
+        .on("click", d => generatePopUp(d));
+      d3.json('https://unpkg.com/us-atlas@3.0.0/states-10m.json')
+        .then(data => {
+            console.log(data.objects.states);
+          const states = topojson.feature(data, data.objects.states);
+          svg.selectAll('path').data(states.features)
+            .enter().append('path')
+            .attr('class', 'state')
+            .attr('d', pathGenerator)
+            .attr('fill', d => generateColor(d))
+            .on("click", d => generatePopUp(d))
+            .append('title').text(d => generateTitle(d));
+        });
+    }(d3, topojson));
+    function reload() {
+      (function (d3, topojson) {
+        'use strict';
+        const svg = d3.select('svg');
+        var g = svg.selectAll('path');
+        g.attr('fill', d => generateColor(d));
+        g.select('title').text(d => generateTitle(d));
+        try{
+          temp = tempCountry;
+          temp += " " + document.getElementById('demo').innerText + ":\n";
+          temp += "New Cases: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['New Cases'] + "\n";
+          temp += "New Deaths: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['NewDeaths'] + "\n";
+          temp += "Cases Hitherto: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['Cases'] + "\n";
+          temp += "Deaths Hitherto: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['Deaths'];
+          document.getElementById('currCountry').innerText = temp;
+        }
+        catch(e){
+        }
+      }(d3, topojson));
+    }
+  </script>
+
+</body>
