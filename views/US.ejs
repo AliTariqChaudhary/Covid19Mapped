@@ -17,10 +17,7 @@
 
   <title>Interactive Covid19 Map</title>
   <style>
-    .sphere {
-      fill: #0986af;
-    }
-    .country {
+    .state {
       stroke: black;
       stroke-opacity: 0.1;
     }
@@ -80,7 +77,6 @@
     }
     .state:hover{
       stroke-width: 5;
-      cursor: pointer;
     }
     #overlay{
       position:absolute;
@@ -98,6 +94,7 @@
   </style>
   <script src="https://unpkg.com/d3@5.16.0/dist/d3.min.js"></script>
   <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.js"></script>
+  <script src="https://unpkg.com/d3-composite-projections@1.0.1"></script>
 
 </head>
 
@@ -105,15 +102,21 @@
   <div class="date">
     <p
       style="line-height:90%;word-wrap:break-word;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-      Active Covid19 Cases per Million as of <text id="demo"
+        Active Covid19 Cases per Million in the U.S. as of  <text id="demo"
         style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
     </p>
     <p
       style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
       Use the slider at the bottom to change the date.</p>
-      <a href = './total'><p
-      style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-      Click here to change to total cases.</p></a>
+      <p style="font-size:60%; color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">All maps: 
+        <a href = './'><text style="color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+          CASES PER CAPITA WORLDWIDE</text></a>
+        <a href = './total'><text style="color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+      TOTAL CASES WORLDWIDE</text></a>
+      <a href = './US'><text style="color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+        U.S. CASES PER CAPITA</text></a>
+      <a href = './totalUS'><text style="color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+          TOTAL U.S. CASES</text></a> </p>
   </div>
 
   <div class='set_width'>
@@ -123,7 +126,7 @@
     </div>
   </div>
 
-  <div id = 'overlay'><text style = "line-height:0%; font-weight: bold; font-size:40%; color:#FFDD3C;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+  <div id = 'overlay'><text style = "line-height:0%; font-size:40%; font-weight: bold; color:#FFDD3C;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
      id= "currCountry"></p></div>
 
   <input type="range" min="3" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider"
@@ -149,14 +152,14 @@
       style="color: #054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>,
     <text id="deadToday"
       style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
-    people died from the virus, and
+    Americans died from the virus, and
 
     <text id='infectParagraph'
     style="line-height:90%;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
     <text id="demo3"
       style="color: #054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif" hidden></text><text id="infectToday"
       style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
-    more people were confirmed infected.</text></p>
+    more Americans were confirmed infected.</text></p>
 
   <br><br><br>
 
@@ -186,9 +189,15 @@
       output2.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
       output3.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
       reload();
-      document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
-      document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];
-      if (this.value == 3 || this.value == 4) {
+      try{
+        document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText].toLocaleString();
+        document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText].toLocaleString();
+      }
+      catch(e)
+      {
+          return;
+      }
+      if (this.value >= 3 && this.value <= 43)  {
         document.getElementById('deadParagraph').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
         document.getElementById('demo3').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
         document.getElementById('infectToday').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
@@ -213,8 +222,8 @@
       output.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
     output2.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
     output3.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-    document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
-    document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];}
+    document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText].toLocaleString();
+    document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText].toLocaleString();}
   </script>
 
   <script>
@@ -230,13 +239,13 @@
         return '#fcbba1'
       else if (count < 0.13 * max)
         return '#fc9272'
-      else if (count < 0.19 * max)
+      else if (count < 0.29 * max)
         return '#fb6a4a'
-      else if (count < 0.25 * max)
+      else if (count < 0.38 * max)
         return '#ef3b2c'
-      else if (count < 0.32 * max)
+      else if (count < 0.52 * max)
         return '#cb181d'
-      else if (count < 0.55 * max)
+      else if (count < 0.85 * max)
         return '#a50f15'
       else if (count < 3 * max)
         return '#67000d'
@@ -245,7 +254,7 @@
       try {
         count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
         count /= pD[d.properties['name']];
-        if (count < 0.005 * max)
+      if (count < 0.005 * max)
         return '#fff5f0'
       else if (count < 0.03 * max)
         return '#fee0d2'
@@ -253,13 +262,13 @@
         return '#fcbba1'
       else if (count < 0.13 * max)
         return '#fc9272'
-      else if (count < 0.19 * max)
+      else if (count < 0.29 * max)
         return '#fb6a4a'
-      else if (count < 0.25 * max)
+      else if (count < 0.38 * max)
         return '#ef3b2c'
-      else if (count < 0.32 * max)
+      else if (count < 0.52 * max)
         return '#cb181d'
-      else if (count < 0.55 * max)
+      else if (count < 0.85 * max)
         return '#a50f15'
       else if (count < 3 * max)
         return '#67000d'
@@ -325,24 +334,22 @@
     (function (d3, topojson) {
       'use strict';
       const svg = d3.select('svg');
-      const projection = d3.geoAlbersUsa();
+      const projection = d3.geoAlbersUsaTerritories();
       const pathGenerator = d3.geoPath().projection(projection);
-      svg.append('path')
-        .attr('class', 'sphere')
-        .attr('d', pathGenerator({ type: 'Sphere' }))
-        .on("click", d => generatePopUp(d));
+
+
       d3.json('https://unpkg.com/us-atlas@3.0.0/states-10m.json')
         .then(data => {
-            console.log(data.objects.states);
           const states = topojson.feature(data, data.objects.states);
           svg.selectAll('path').data(states.features)
             .enter().append('path')
             .attr('class', 'state')
             .attr('d', pathGenerator)
             .attr('fill', d => generateColor(d))
-            .on("click", d => generatePopUp(d))
             .append('title').text(d => generateTitle(d));
         });
+    
+
     }(d3, topojson));
     function reload() {
       (function (d3, topojson) {

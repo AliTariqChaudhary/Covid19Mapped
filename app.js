@@ -33,6 +33,10 @@ var countryDict = {
   'Vietnam': {}, 'Western Sahara': {}, 'Yemen': {}, 'Zambia': {}, 'Zimbabwe': {}, 'Kosovo': {}, 'korea-north': {}
 }
 
+var statesDict = {'Alabama' : {}, 'Alaska' : {},'Arizona' : {},'Colorado' : {},'Florida' : {},'Georgia' : {},'Indiana' : {},'Kansas' : {}, 'Maine' : {}, 'Massachusetts' : {}, 'Minnesota' : {}, 'New Jersey' : {}, 'North Carolina' : {}, 'North Dakota' : {}, 'Oklahoma' : {}, 'Pennsylvania' : {}, 'South Dakota' : {},  'Texas' : {}, 'Wyoming' : {}, 'Connecticut' : {}, 'Missouri' : {},
+'West Virginia': {}, 'Illinois' : {}, 'New Mexico' : {}, 'Arkansas' : {}, 'California' : {}, 'Delaware' : {}, 'District of Columbia' : {}, 'Hawaii' : {}, 'Iowa' : {}, 'Kentucky' : {}, 'Maryland' : {}, 'Michigan' : {}, 'Mississippi' : {}, 'Montana' : {}, 'New Hampshire' : {}, 'New York' : {}, 'Ohio' : {}, 'Oregon' : {}, 'Tennessee' : {}, 'Utah' : {}, 'Virginia' : {}, 'Washington' : {}, 'Wisconsin' : {}, 'American Samoa' : {}, 'Guam' : {}, 'Northern Mariana Islands' : {},
+'Nebraska' : {}, 'South Carolina' : {}, 'Puerto Rico' : {}, 'Virgin Islands' : {}, 'Idaho' : {}, 'Nevada' : {}, 'Vermont' : {}, 'Louisiana' : {}, 'Rhode Island': {}}
+
 var popDict = {
   'Afghanistan': 35.530081, 'Albania': 2.930187, 'Algeria': 41.318142, 'Andorra': 0.076965, 'Angola': 29.784193, 'Antarctica': 0.0001, 'Antigua and Barbuda': 0.102012, 'Argentina': 44.271041, 'Armenia': 2.93045, 'Australia': 24.450561, 'Austria': 8.735453, 'Azerbaijan': 9.827589, 'Bahamas': 0.395361, 'Bahrain': 1.492584, 'Bangladesh': 164.669751, 'Barbados': 0.285719, 'Belarus': 9.468338, 'Belgium': 11.429336, 'Belize': 0.374681, 'Benin': 11.175692,
   'Bermuda': 0.061349, 'Bhutan': 0.80761, 'Bolivia': 11.0516, 'Bosnia and Herz.': 3.507017, 'Botswana': 2.291661, 'Brazil': 209.288278, 'Brunei': 0.428697, 'Bulgaria': 7.084571, 'Burkina Faso': 19.193382, 'Burundi': 10.864245, 'Cambodia': 16.005373, 'Cameroon': 24.053727, 'Canada': 36.624199, 'Central African Rep.': 4.65908, 'Chad': 14.899994, 'Chile': 18.054726, 'China': 1409.517397, 'Colombia': 49.065615, 'Comoros': 0.813912, 'Congo': 5.26075, 'Costa Rica': 4.905769,
@@ -46,7 +50,16 @@ var popDict = {
   'Dem. Rep. Congo': 84.07, 'Togo': 7.797694, 'Tokelau': 0.0013, 'Tonga': 0.10802, 'Trinidad and Tobago': 1.369125, 'Tunisia': 11.532127, 'Turkey': 80.74502, 'Turkmenistan': 5.758075, 'Turks and Caicos Islands': 0.035446, 'Tuvalu': 0.011192, 'Uganda': 42.862958, 'Ukraine': 44.222947, 'United Arab Emirates': 9.400145, 'United Kingdom': 66.181585, 'United States of America': 324.459463, 'Uruguay': 3.45675, 'Uzbekistan': 31.910641, 'Vanuatu': 0.276244, 'Venezuela': 31.977065, 'Vietnam': 95.5408,
   'Wallis and Futuna': 0.011773, 'W. Sahara': 0.552628, 'Yemen': 28.25042, 'Yugoslavia': 10.64, 'Zambia': 17.09413, 'Zimbabwe': 16.529904, 'Serbia': 6.982, 'Kosovo': 1.845, 'Taiwan': 23.78
 }
+
+var statesPopDict = {'Alabama' : 4.903, 'Alaska' : 0.731 ,'Arizona' : 7.279 ,'Colorado' : 5.759,'Florida' : 21.48, 'Georgia' : 10.62,'Indiana' : 6.732,'Kansas' : 2.913, 'Maine' : 1.344, 'Massachusetts' : 6.893, 'Minnesota' : 5.64, 'New Jersey' : 8.882, 'North Carolina' : 10.49, 'North Dakota' : 0.762, 'Oklahoma' : 3.957, 'Pennsylvania' : 12.8 , 'South Dakota' : 0.884,  'Texas' : 29, 'Wyoming' : 0.578, 'Connecticut' : 3.565, 'Missouri' : 6.137,
+'West Virginia': 1.792, 'Illinois' : 12.67, 'New Mexico' : 2.097, 'Arkansas' : 3.018, 'California' : 39.51, 'Delaware' : 0.973, 'District of Columbia' : 0.702, 'Hawaii' : 1.416, 'Iowa' : 3.155, 'Kentucky' : 4.468, 'Maryland' : 6.046, 'Michigan' : 9.987, 'Mississippi' : 2.976, 'Montana' : 1.069, 'New Hampshire' : 1.36, 'New York' : 19.45, 'Ohio' : 11.69, 'Oregon' : 4.218, 'Tennessee' : 6.829, 'Utah' : 3.206, 'Virginia' : 8.536, 'Washington' : 7.615, 'Wisconsin' : 5.822, 'American Samoa' : 0.055, 'Guam' : 0.165, 'Commonwealth of the Northern Mariana Islands' : 0.056,
+'Nebraska' : 1.934, 'South Carolina' : 5.149, 'Puerto Rico' : 3.194, 'United States Virgin Islands' : 0.106, 'Idaho' : 1.787, 'Nevada' : 3.08, 'Vermont' : 0.623, 'Louisiana' : 4.649, 'Rhode Island': 1.059}
+
 var parsedData;
+
+
+
+
 
 
 //console.log(new Date(new Date().toLocaleDateString("en-US", {timezone: "UTC"})));
@@ -63,6 +76,32 @@ function getFromSave1() {
     return;
   }));
 }
+
+var USDictFromSave;
+
+function getUSFromSave1(){
+      return new Promise((resolve, reject) => fs.readFile("statesDict.txt", (err, data) => {
+      if (err) console.log(err);
+      else {
+        USDictFromSave = JSON.parse(data);
+        for(var key in USDictFromSave){
+          if(key == 'Northern Mariana Islands'){
+            USDictFromSave['Commonwealth of the Northern Mariana Islands'] = USDictFromSave[key];
+            delete USDictFromSave[key];
+          }
+          else if(key == 'Virgin Islands'){
+            USDictFromSave['United States Virgin Islands'] = USDictFromSave[key];
+            delete USDictFromSave[key];
+          }
+        }
+        console.log('File read.');
+        return resolve();
+      }
+      return;
+    }));
+  }
+
+
 
 var diffArray = [['Western Sahara', 'W. Sahara'], ['Bosnia and Herzegovina', 'Bosnia and Herz.'],
 ['Central African Republic', 'Central African Rep.'], ['Republic of the Congo', 'Congo'], ['Equatorial Guinea', 'Eq. Guinea'],
@@ -160,11 +199,91 @@ async function getData() {
 }
 
 
+function doUSRequest() {
+  tempURL = 'https://api.covid19api.com/dayone/country/united-states';
+  return new Promise((resolve, reject) => {
+    let req = https.get(tempURL, (res) => {
+      const { statusCode } = res;
+      const contentType = res.headers['content-type'];
+
+      let error;
+      if (statusCode !== 200) {
+        error = new Error('Request Failed.\n' +
+          `Status Code: ${statusCode}`);
+      } else if (!/^application\/json/.test(contentType)) {
+        error = new Error('Invalid content-type.\n' +
+          `Expected application/json but received ${contentType}`);
+      }
+      if (error) {
+        console.error(error.message);
+        // Consume response data to free up memory
+        res.resume();
+        return;
+      }
+
+      res.setEncoding('utf8');
+      let rawData = '';
+      res.on('data', (chunk) => { rawData += chunk; });
+      res.on('end', () => {
+        try {
+          var booly = 0;
+          parsedData = JSON.parse(rawData);
+          for (var i = 0; i < parsedData.length; i++) {
+            try{
+              if(statesDict[parsedData[i].Province][parsedData[i].Date])
+                {
+                  statesDict[parsedData[i].Province][parsedData[i].Date]['Cases'] += parsedData[i].Confirmed ;
+                  statesDict[parsedData[i].Province][parsedData[i].Date]['Deaths'] += parsedData[i].Deaths;
+                  statesDict[parsedData[i].Province][parsedData[i].Date]['Recovered'] += parsedData[i].Recovered;  
+                  statesDict[parsedData[i].Province][parsedData[i].Date]['Active'] += parsedData[i].Active;
+                }
+              else
+              {
+                statesDict[parsedData[i].Province][parsedData[i].Date] = { 'Cases': parsedData[i].Confirmed };
+                statesDict[parsedData[i].Province][parsedData[i].Date]['Deaths'] = parsedData[i].Deaths;
+                statesDict[parsedData[i].Province][parsedData[i].Date]['Recovered'] = parsedData[i].Recovered;
+                statesDict[parsedData[i].Province][parsedData[i].Date]['Active'] = parsedData[i].Active;
+              }
+            }
+            catch(e){
+              console.log(parsedData[i].Province);
+            }
+          }
+          console.log(parsedData.length)
+        } catch (e) {
+          console.error(e.message);
+        }
+      });
+    }).on('error', (e) => {
+      console.error(`Got error: ${e.message}`);
+    });
+
+    req.on('response', res => {
+      resolve(res);
+    });
+
+    req.on('error', err => {
+      reject(err);
+    });
+  });
+}
+
+
+async function getUSData() {
+  await doUSRequest();
+  await sleep(100000)
+  fs.writeFile("statesDict.txt", JSON.stringify(statesDict), 'binary', (err) => {
+    if (err) console.log(err)
+    else console.log('File saved')
+  });
+}
+
+
 async function getTotalData() {
   await getData();
   await getFromSave();
+  await getUSData();
 }
-
 
 
 var max = 0;
@@ -192,6 +311,21 @@ function getMaxCases() {
   });
 }
 
+var USTotMax=0;
+
+function getUSMaxCases() {
+  return new Promise((resolve, reject) =>{
+    for (var key in USDictFromSave) {
+      for (var i in USDictFromSave[key]) {
+        if(USDictFromSave[key][i].Active > USTotMax)
+          USTotMax = USDictFromSave[key][i].Active;
+      }
+    }
+    return resolve();
+  });
+}
+
+
 var DeathsDict = {};
 
 function getDeathsbyDay() {
@@ -206,6 +340,29 @@ function getDeathsbyDay() {
         }
         else {
           DeathsDict[i] += DictFromSave[key][i].Deaths - DictFromSave[key][tempkey].Deaths;
+        }
+      }
+      tempkey = i;
+      booly = 1;
+    }
+    booly = 0;
+  }
+}
+
+var USDeathsDict = {}
+
+function getUSDeathsbyDay(){
+  var tempkey;
+  var booly = 0;
+  for (var key in USDictFromSave) {
+    for (var i in USDictFromSave[key]) {
+      if (booly != 0) {
+        USDictFromSave[key][i]['NewDeaths'] = USDictFromSave[key][i].Deaths - USDictFromSave[key][tempkey].Deaths;
+        if (!USDeathsDict[i]) {
+          USDeathsDict[i] = USDictFromSave[key][i].Deaths - USDictFromSave[key][tempkey].Deaths;
+        }
+        else {
+          USDeathsDict[i] += USDictFromSave[key][i].Deaths - USDictFromSave[key][tempkey].Deaths;
         }
       }
       tempkey = i;
@@ -238,7 +395,28 @@ function getInfectbyDay() {
   }
 }
 
+var USInfectDict = {};
 
+function getUSInfectbyDay(){
+  var tempkey;
+  var booly = 0;
+  for (var key in USDictFromSave) {
+    for (var i in USDictFromSave[key]) {
+      if (booly != 0) {
+        USDictFromSave[key][i]['New Cases'] = USDictFromSave[key][i].Cases - USDictFromSave[key][tempkey].Cases;
+        if (!USInfectDict[i]) {
+            USInfectDict[i] = USDictFromSave[key][i].Cases - USDictFromSave[key][tempkey].Cases;
+        }
+        else {
+          USInfectDict[i] += USDictFromSave[key][i].Cases - USDictFromSave[key][tempkey].Cases;
+        }
+      }
+      tempkey = i;
+      booly = 1;
+    }
+    booly = 0;
+  }
+}
 
 function getLogTotal(){
   var booly = 0
@@ -274,6 +452,10 @@ async function getMaxCases2() {
   getDeathsbyDay();
   getInfectbyDay();
   getLogTotal();
+  await getUSFromSave1()
+  await  getUSMaxCases();
+  getUSDeathsbyDay()
+  getUSInfectbyDay();
   console.log('Ready');
 }
 
@@ -283,6 +465,7 @@ getMaxCases2();
 
 schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
   await getData();
+  await getUSData();
   await (sleep(1000000))
   await getMaxCases2();
   today = new Date(new Date().toUTCString());
@@ -298,7 +481,6 @@ app.set('view engine', 'ejs');
 
 
 app.get('/', (req, res) => {
-  console.log(JSON.stringify(countryDict));
   res.render('index', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(max), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
 });
 
@@ -311,7 +493,11 @@ app.get('/totalbubble', (req, res) => {
 });
 
 app.get('/US', (req, res) => {
-  res.render('US.ejs', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(max), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
+  res.render('US', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(USDictFromSave), max: JSON.stringify(max), dD: JSON.stringify(USDeathsDict), dead: 5, pD: JSON.stringify(statesPopDict), iD: JSON.stringify(USInfectDict) });
+});
+
+app.get('/totalUS', (req, res) => {
+  res.render('USTotal', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(USDictFromSave), max: JSON.stringify(USTotMax), dD: JSON.stringify(USDeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(USInfectDict) });
 });
 
 

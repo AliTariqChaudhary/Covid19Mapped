@@ -17,10 +17,7 @@
 
   <title>Interactive Covid19 Map</title>
   <style>
-    .sphere {
-      fill: #0986af;
-    }
-    .country {
+    .state {
       stroke: black;
       stroke-opacity: 0.1;
     }
@@ -78,9 +75,8 @@
       width: 75%;
       height: 50%;
     }
-    .country:hover{
+    .state:hover{
       stroke-width: 5;
-      cursor: pointer;
     }
     #overlay{
       position:absolute;
@@ -98,6 +94,7 @@
   </style>
   <script src="https://unpkg.com/d3@5.16.0/dist/d3.min.js"></script>
   <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.js"></script>
+  <script src="https://unpkg.com/d3-composite-projections@1.0.1"></script>
 
 </head>
 
@@ -105,7 +102,7 @@
   <div class="date">
     <p
       style="line-height:90%;word-wrap:break-word;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
-      Active Covid19 Cases per Million as of <text id="demo"
+      Total Active Covid19 Cases in the U.S. as of  <text id="demo"
         style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
     </p>
     <p
@@ -129,7 +126,7 @@
     </div>
   </div>
 
-  <div id = 'overlay'><text style = "line-height:0%; font-weight: bold; font-size:40%; color:#FFDD3C;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+  <div id = 'overlay'><text style = "line-height:0%; font-size:40%; font-weight: bold; color:#FFDD3C;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
      id= "currCountry"></p></div>
 
   <input type="range" min="3" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider"
@@ -155,14 +152,14 @@
       style="color: #054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>,
     <text id="deadToday"
       style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
-    people died from the virus, and
+    Americans died from the virus, and
 
     <text id='infectParagraph'
     style="line-height:90%;color:#054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
     <text id="demo3"
       style="color: #054E66;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif" hidden></text><text id="infectToday"
       style="color: red;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"></text>
-    more people were confirmed infected.</text></p>
+    more Americans were confirmed infected.</text></p>
 
   <br><br><br>
 
@@ -192,9 +189,15 @@
       output2.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
       output3.innerHTML = new Date(((this.value-2) * (1000 * 3600 * 24) + firstD.getTime())).toDateString();
       reload();
-      document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
-      document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];
-      if (this.value == 3 || this.value == 4) {
+      try{
+        document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText].toLocaleString();
+        document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText].toLocaleString();
+      }
+      catch(e)
+      {
+          return;
+      }
+      if (this.value >= 3 && this.value <= 43)  {
         document.getElementById('deadParagraph').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
         document.getElementById('demo3').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
         document.getElementById('infectToday').style = "color:#D8DEE9;line-height:90%;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
@@ -219,84 +222,61 @@
       output.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
     output2.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
     output3.innerHTML = new Date(((document.getElementById('myRange').value -2)* (1000 * 3600 * 24) + firstD.getTime())).toDateString();
-    document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText];
-    document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText];}
+    document.getElementById('deadToday').innerText = JSON.parse(document.getElementById('dD').innerText)[document.getElementById('todayForLook').innerText].toLocaleString();
+    document.getElementById('infectToday').innerText = JSON.parse(document.getElementById('iD').innerText)[document.getElementById('todayForLook').innerText].toLocaleString();}
   </script>
 
   <script>
     var cD = JSON.parse(document.getElementById('cD').innerText);
     var pD = JSON.parse(document.getElementById('pD').innerText);
     var max = document.getElementById('max').innerText;
-    function getColor(count) {
-      if (count < 0.005 * max)
+    function getColor(count){
+    if (count < 0.001 * max)
+          return '#fff5f0'
+        else if(count < 0.005 * max)
+          return '#fee0d2'
+        else if(count < 0.01 * max)
+          return '#fcbba1'
+        else if(count < 0.02 * max)
+          return '#fc9272'
+        else if(count < 0.025 * max)
+          return '#fb6a4a'
+        else if(count < 0.03 * max)
+          return '#ef3b2c'
+        else if(count < 0.04 * max)
+          return '#cb181d'
+        else if(count < 0.50 * max)
+          return '#a50f15'
+        else if(count < 2 * max)
+          return '#67000d'
+  };
+  function generateColor(d){
+    try{
+      count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
+      if (count < 0.001 * max)
         return '#fff5f0'
-      else if (count < 0.03 * max)
+      else if(count < 0.005 * max)
         return '#fee0d2'
-      else if (count < 0.08 * max)
+      else if(count < 0.01 * max)
         return '#fcbba1'
-      else if (count < 0.13 * max)
+      else if(count < 0.02 * max)
         return '#fc9272'
-      else if (count < 0.19 * max)
+      else if(count < 0.025 * max)
         return '#fb6a4a'
-      else if (count < 0.25 * max)
+      else if(count < 0.03 * max)
         return '#ef3b2c'
-      else if (count < 0.32 * max)
+      else if(count < 0.04 * max)
         return '#cb181d'
-      else if (count < 0.55 * max)
+      else if(count < 0.50 * max)
         return '#a50f15'
-      else if (count < 3 * max)
+      else if(count < 2 * max)
         return '#67000d'
-    };
-    function generateColor(d) {
-      try {
-        count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
-        count /= pD[d.properties['name']];
-        if (count < 0.005 * max)
-        return '#fff5f0'
-      else if (count < 0.03 * max)
-        return '#fee0d2'
-      else if (count < 0.08 * max)
-        return '#fcbba1'
-      else if (count < 0.13 * max)
-        return '#fc9272'
-      else if (count < 0.19 * max)
-        return '#fb6a4a'
-      else if (count < 0.25 * max)
-        return '#ef3b2c'
-      else if (count < 0.32 * max)
-        return '#cb181d'
-      else if (count < 0.55 * max)
-        return '#a50f15'
-      else if (count < 3 * max)
-        return '#67000d'
-      }
+    }
       catch (e) {
-        //console.log(d.properties['name'])
-        if (d.properties['name'] == 'Greenland') {
-          if (document.getElementById('todayForLook').innerText.substr(5, 2) == '03' && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) > 15)
-            return '#fff5f0'
-          else if (document.getElementById('todayForLook').innerText.substr(5, 2) == '04' && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) < 8)
-            return '#fff5f0'
-        }
-          else if (d.properties['name'] == 'Falkland Is.') {
-          if (document.getElementById('todayForLook').innerText.substr(5, 2) == '04' && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) > 2 && Number(document.getElementById('todayForLook').innerText.substr(8, 2)) < 30)
-            return '#fff5f0'
-        }
-        else if (d.properties['name'] == 'Somaliland') {
-          try { count = cD['Somalia'][document.getElementById('todayForLook').innerText].Active / pD['Somalia'] }
-          catch (e) {
-            return "rgb(169,169,169)"
-          }
-          return getColor(count)
-        }
-        return "rgb(169,169,169)";
       }
     }
     var tempCountry;
     function generatePopUp(d){
-        if(d.properties.name == 'Fiji'){
-          document.getElementById('overlay').style.display = "none";
-          return}
       if(d.properties.name == tempCountry){
         document.getElementById('overlay').style.display = "none";
         tempCountry = "";
@@ -322,7 +302,7 @@
       //console.log(d);
       try {
         count = cD[d.properties['name']][document.getElementById('todayForLook').innerText].Active;
-        return d.properties['name'] + " Active Cases per Million on " + document.getElementById('demo').innerText + ":\n " + String((count/pD[d.properties['name']]).toFixed(2));
+        return d.properties['name'] + " Total Active Cases on " + document.getElementById('demo').innerText + ":\n " + count.toLocaleString();
       }
       catch (e) {
         return 'No reported active cases or insufficient data on ' + document.getElementById('demo').innerText;
@@ -331,23 +311,22 @@
     (function (d3, topojson) {
       'use strict';
       const svg = d3.select('svg');
-      const projection = d3.geoNaturalEarth1();
+      const projection = d3.geoAlbersUsaTerritories();
       const pathGenerator = d3.geoPath().projection(projection);
-      svg.append('path')
-        .attr('class', 'sphere')
-        .attr('d', pathGenerator({ type: 'Sphere' }))
-        .on("click", d => generatePopUp(d));
-      d3.json('https://unpkg.com/world-atlas@2.0.2/countries-110m.json')
+
+
+      d3.json('https://unpkg.com/us-atlas@3.0.0/states-10m.json')
         .then(data => {
-          const countries = topojson.feature(data, data.objects.countries);
-          svg.selectAll('path').data(countries.features)
+          const states = topojson.feature(data, data.objects.states);
+          svg.selectAll('path').data(states.features)
             .enter().append('path')
-            .attr('class', 'country')
+            .attr('class', 'state')
             .attr('d', pathGenerator)
             .attr('fill', d => generateColor(d))
-            .on("click", d => generatePopUp(d))
             .append('title').text(d => generateTitle(d));
         });
+    
+
     }(d3, topojson));
     function reload() {
       (function (d3, topojson) {
