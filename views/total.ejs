@@ -362,6 +362,13 @@
           document.getElementById('currCountry').innerText = temp;
         }
         catch(e){
+          temp = tempCountry;
+          temp += " " + document.getElementById('demo').innerText + ":\n";
+          temp += "New Cases: " + 0 + "\n";
+          temp += "New Deaths: " + 0 + "\n";
+          temp += "Cases Hitherto: " + 0 + "\n";
+          temp += "Deaths Hitherto: " + 0;
+          document.getElementById('currCountry').innerText = temp;
         }
       }(d3, topojson));
     }
