@@ -77,16 +77,17 @@
     }
     .state:hover{
       stroke-width: 5;
+      cursor: pointer;
     }
     #overlay{
-      position:absolute;
+        position:absolute;
       border-radius: 10px;
       display: none;
       color:red;
-      width: 100px;
-      height: 115px;
+      width: 200px;
+      height: 180px;
       top: 31%;
-      left: 38%;
+      left: 5%;
       background-color: rgba(13,13,13,1);
       z-index: 2;
     }
@@ -123,7 +124,7 @@
     </div>
   </div>
 
-  <div id = 'overlay'><text style = "line-height:0%; font-size:40%; font-weight: bold; color:#FFDD3C;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
+  <div id = 'overlay'><text style = "line-height:0%; font-size:70%; font-weight: bold; color:#FFDD3C;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"
      id= "currCountry"></p></div>
 
   <input type="range" min="3" max="<%= locals.totalDays %>" value="<%= locals.totalDays %>" class="slider"
@@ -308,10 +309,10 @@
       try{
         temp = d.properties.name;
         temp += " " + document.getElementById('demo').innerText + ":\n";
-        temp += "New Cases: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['New Cases'] + "\n";
-        temp += "New Deaths: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['NewDeaths'] + "\n";
-        temp += "Cases Hitherto: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['Cases'] + "\n";
-        temp += "Deaths Hitherto: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['Deaths'];
+        temp += "New Cases: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['New Cases'].toLocaleString() + "\n";
+        temp += "New Deaths: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['NewDeaths'].toLocaleString() + "\n";
+        temp += "Cases Hitherto: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['Cases'].toLocaleString() + "\n";
+        temp += "Deaths Hitherto: " + cD[d.properties['name']][document.getElementById('todayForLook').innerText]['Deaths'].toLocaleString();
         document.getElementById('currCountry').innerText = temp;
       }
       catch(e){
@@ -343,6 +344,7 @@
             .attr('class', 'state')
             .attr('d', pathGenerator)
             .attr('fill', d => generateColor(d))
+            .on("click", d => generatePopUp(d))
             .append('title').text(d => generateTitle(d));
         });
     
@@ -358,10 +360,10 @@
         try{
           temp = tempCountry;
           temp += " " + document.getElementById('demo').innerText + ":\n";
-          temp += "New Cases: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['New Cases'] + "\n";
-          temp += "New Deaths: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['NewDeaths'] + "\n";
-          temp += "Cases Hitherto: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['Cases'] + "\n";
-          temp += "Deaths Hitherto: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['Deaths'];
+          temp += "New Cases: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['New Cases'].toLocaleString() + "\n";
+          temp += "New Deaths: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['NewDeaths'].toLocaleString() + "\n";
+          temp += "Cases Hitherto: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['Cases'].toLocaleString() + "\n";
+          temp += "Deaths Hitherto: " + cD[tempCountry][document.getElementById('todayForLook').innerText]['Deaths'].toLocaleString();
           document.getElementById('currCountry').innerText = temp;
         }
         catch(e){
