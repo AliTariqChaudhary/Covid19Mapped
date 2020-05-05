@@ -465,7 +465,7 @@ async function getMaxCases2() {
 
 
 
-schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
+/*schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
   await getData();
   await getUSData();
   await (sleep(100000))
@@ -475,7 +475,7 @@ schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
   diff += 1;
   todayString = today.toDateString();
 
-})
+})*/
 
 async function everything() {
   await getData();
