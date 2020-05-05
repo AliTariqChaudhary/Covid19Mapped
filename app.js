@@ -329,6 +329,7 @@ function getUSMaxCases() {
 var DeathsDict = {};
 
 function getDeathsbyDay() {
+  DeathsDict = {};
   var tempkey;
   var booly = 0;
   for (var key in DictFromSave) {
@@ -352,6 +353,7 @@ function getDeathsbyDay() {
 var USDeathsDict = {}
 
 function getUSDeathsbyDay(){
+  USDeathsDict = {}
   var tempkey;
   var booly = 0;
   for (var key in USDictFromSave) {
@@ -375,6 +377,7 @@ function getUSDeathsbyDay(){
 var InfectDict = {};
 
 function getInfectbyDay() {
+  InfectDict = {};
   var tempkey;
   var booly = 0;
   for (var key in DictFromSave) {
@@ -398,6 +401,7 @@ function getInfectbyDay() {
 var USInfectDict = {};
 
 function getUSInfectbyDay(){
+  USInfectDict = {};
   var tempkey;
   var booly = 0;
   for (var key in USDictFromSave) {
