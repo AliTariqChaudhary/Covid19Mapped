@@ -123,7 +123,7 @@ function sleep(ms) {
 }
 
 function doRequest(key) {
-  tempURL = 'https://api.covid19api.com/dayone/country/' + key;
+  tempURL = 'https://api.covid19api.com/total/dayone/country/' + key;
   return new Promise((resolve, reject) => {
     let req = https.get(tempURL, (res) => {
       const { statusCode } = res;
@@ -199,6 +199,7 @@ async function getData() {
 }
 
 
+
 function doUSRequest() {
   tempURL = 'https://api.covid19api.com/dayone/country/united-states';
   return new Promise((resolve, reject) => {
@@ -246,10 +247,8 @@ function doUSRequest() {
               }
             }
             catch(e){
-              console.log(parsedData[i].Province);
             }
           }
-          console.log(parsedData.length)
         } catch (e) {
           console.error(e.message);
         }
@@ -463,14 +462,13 @@ async function getMaxCases2() {
   console.log('Ready');
 }
 
-getMaxCases2();
 
 
 
 schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
   await getData();
   await getUSData();
-  await (sleep(1000000))
+  await (sleep(100000))
   await getMaxCases2();
   today = new Date(new Date().toUTCString());
   console.log((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
@@ -478,6 +476,20 @@ schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
   todayString = today.toDateString();
 
 })
+
+async function everything() {
+  await getData();
+  await getUSData();
+  await (sleep(100000))
+  await getMaxCases2();
+  today = new Date(new Date().toUTCString());
+  console.log((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
+  diff += 1;
+  todayString = today.toDateString();
+}
+
+
+getMaxCases2();
 
 
 
