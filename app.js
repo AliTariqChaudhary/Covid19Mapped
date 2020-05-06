@@ -165,12 +165,8 @@ function doRequest(key) {
           var booly = 0;
           parsedData = JSON.parse(rawData);
           for (var i = 0; i < parsedData.length; i++) {
-            if(countryDict[key][parsedData[i].Date])
+            if(!countryDict[key][parsedData[i].Date])
               {
-                pass
-              }
-            else
-            {
               countryDict[key][parsedData[i].Date] = { 'Cases': parsedData[i].Confirmed };
               countryDict[key][parsedData[i].Date]['Deaths'] = parsedData[i].Deaths;
               countryDict[key][parsedData[i].Date]['Recovered'] = parsedData[i].Recovered;
