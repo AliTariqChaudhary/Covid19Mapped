@@ -77,6 +77,19 @@ function getFromSave1() {
   }));
 }
 
+function getFromSave2() {
+  return new Promise((resolve, reject) => fs.readFile("countryDict.txt", (err, data) => {
+    if (err) console.log(err);
+    else {
+      countryDict = JSON.parse(data);
+      console.log('File read.');
+      return resolve();
+    }
+    return;
+  }));
+}
+
+
 var USDictFromSave;
 
 function getUSFromSave1(){
@@ -154,10 +167,7 @@ function doRequest(key) {
           for (var i = 0; i < parsedData.length; i++) {
             if(countryDict[key][parsedData[i].Date])
               {
-                countryDict[key][parsedData[i].Date]['Cases'] += parsedData[i].Confirmed ;
-                countryDict[key][parsedData[i].Date]['Deaths'] += parsedData[i].Deaths;
-                countryDict[key][parsedData[i].Date]['Recovered'] += parsedData[i].Recovered;  
-                countryDict[key][parsedData[i].Date]['Active'] += parsedData[i].Active;
+                pass
               }
             else
             {
@@ -465,7 +475,8 @@ async function getMaxCases2() {
 
 
 
-/*schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
+schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
+  await getFromSave2();
   await getData();
   await getUSData();
   await (sleep(100000))
@@ -475,9 +486,10 @@ async function getMaxCases2() {
   diff += 1;
   todayString = today.toDateString();
 
-})*/
+})
 
 async function everything() {
+  await getFromSave2();
   await getData();
   await getUSData();
   await (sleep(100000))
