@@ -498,7 +498,7 @@ async function everything() {
 
 
 
-  getMaxCases2();
+getMaxCases2();
 
 
 
