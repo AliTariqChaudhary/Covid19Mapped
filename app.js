@@ -486,7 +486,7 @@ async function getMaxCases2() {
 */
 async function everything() {
   await getFromSave2();
-//  await getData();
+  await getData();
   await getUSData();
   await (sleep(100000))
   await getMaxCases2();
@@ -495,7 +495,6 @@ async function everything() {
   diff += 1;
   todayString = today.toDateString();
 }
-
 
 getMaxCases2();
 
