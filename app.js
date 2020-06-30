@@ -471,7 +471,7 @@ async function getMaxCases2() {
 
 
 
-/*schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
+schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
   await getFromSave2();
   await getData();
   await getUSData();
@@ -483,7 +483,7 @@ async function getMaxCases2() {
   todayString = today.toDateString();
 
 })
-*/
+
 async function everything() {
   await getFromSave2();
   await getData();
