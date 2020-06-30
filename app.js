@@ -300,12 +300,14 @@ function getMaxCases() {
     var temp1;
     for (var key in DictFromSave) {
       for (var i in DictFromSave[key]) {
-        if(DictFromSave[key][i].Active > totmax)
-          totmax = DictFromSave[key][i].Active;
-        if (key != 'San Marino')
-          if (DictFromSave[key][i].Active / popDict[key] > max) {
-            max = DictFromSave[key][i].Active / popDict[key];
-          }
+        if(i != '2020-06-24T00:00:00Z'){
+            if(DictFromSave[key][i].Active > totmax)
+              totmax = DictFromSave[key][i].Active;
+            if (key != 'San Marino')
+              if (DictFromSave[key][i].Active / popDict[key] > max) {
+                max = DictFromSave[key][i].Active / popDict[key];
+              }
+            }
       }
       if (key == "C�te d'Ivoire") {
         DictFromSave["Côte d'Ivoire"] = DictFromSave["C�te d'Ivoire"];
@@ -470,7 +472,7 @@ async function getMaxCases2() {
 
 
 
-
+/*
 schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
   await getFromSave2();
   await getData();
@@ -482,7 +484,7 @@ schedule.scheduleJob({ hour: 00, minute: 00 }, async function () {
   diff += 1;
   todayString = today.toDateString();
 
-})
+})*/
 
 async function everything() {
   await getFromSave2();
@@ -501,11 +503,11 @@ getMaxCases2();
 
 
 
-
 app.set('view engine', 'ejs');
 
 
 app.get('/', (req, res) => {
+  console.log(max);
   res.render('index', { totalDays: diff + 2, todayString: todayString, cd: JSON.stringify(DictFromSave), max: JSON.stringify(max), dD: JSON.stringify(DeathsDict), dead: 5, pD: JSON.stringify(popDict), iD: JSON.stringify(InfectDict) });
 });
 
