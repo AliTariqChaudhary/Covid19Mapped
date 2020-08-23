@@ -490,7 +490,7 @@ async function everything() {
   await getFromSave2();
   await getData();
   await getUSData();
-  await (sleep(100000))
+  await (sleep(500000))
   await getMaxCases2();
   today = new Date(new Date().toUTCString());
   console.log((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
@@ -498,6 +498,7 @@ async function everything() {
   todayString = today.toDateString();
 }
 
+//everything();
 getMaxCases2();
 
 
