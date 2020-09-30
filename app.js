@@ -498,8 +498,8 @@ async function everything() {
   todayString = today.toDateString();
 }
 
-everything();
-getMaxCases2();
+//everything();
+//getMaxCases2();
 
 
 
