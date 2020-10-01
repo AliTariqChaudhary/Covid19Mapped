@@ -499,7 +499,7 @@ async function everything() {
 }
 
 //everything();
-//getMaxCases2();
+getMaxCases2();
 
 
 
