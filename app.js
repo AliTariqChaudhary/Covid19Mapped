@@ -498,7 +498,7 @@ async function everything() {
   todayString = today.toDateString();
 }
 
-everything();
+//everything();
 getMaxCases2();
 
 
