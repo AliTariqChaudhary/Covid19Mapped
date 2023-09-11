@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000;
 
 
 var firstD = new Date('January 22, 2020');
-var today = new Date(new Date().toLocaleString('en-US', {timeZone: 'America/Los_Angeles'}));
+var today = new Date('August 20, 2022');
 console.log((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
 diff = Math.floor((today.getTime() - firstD.getTime()) / (1000 * 3600 * 24));
 todayString = today.toDateString();
